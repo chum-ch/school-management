@@ -1,0 +1,98 @@
+<template>
+  <div class="p-fluid">
+    <label v-if="label !== ''">{{ label }} </label>
+    <span v-if="required" class="text-red-500"> *</span>
+    <div class="my-1" v-if="show_icon">
+      <span :class="right_icon ? 'p-input-icon-right' : 'p-input-icon-left'">
+        <i
+          :class="
+            user_icon
+              ? 'pi pi-user'
+              : search_icon
+              ? 'pi pi-search'
+              : spinner_icon
+              ? 'pi pi-spin pi-spinner'
+              : email_icon
+              ? 'pi pi-envelope'
+              : 'pi pi-user'
+          "
+        />
+        <InputText
+          v-model="values"
+          :class="required && message_error !== '' ? p_invalid : ''"
+          :style="{ border: border }"
+          :placeholder="placeholder"
+        />
+      </span>
+    </div>
+    <div class="my-1" v-else>
+      <InputText
+        v-model="values"
+        :style="{ border: border }"
+        :class="required && message_error !== '' ? p_invalid : ''"
+        :placeholder="placeholder"
+        :disabled="is_disabled"
+      />
+    </div>
+    <small v-if="message_error !== ''" class="flex text-red-500">
+      <i :class="message_error ? 'pi pi-info-circle mr-1' : ''" />
+      {{ message_error }}</small
+    >
+  </div>
+</template>
+<script>
+import InputText from "primevue/inputtext";
+export default {
+  name: "CustomInputText",
+  props: {
+    msg: String,
+    placeholder: String,
+    required: Boolean,
+    label: String,
+    message_error: String,
+    user_icon: Boolean,
+    search_icon: Boolean,
+    spinner_icon: Boolean,
+    email_icon: Boolean,
+    show_icon: Boolean,
+    right_icon: Boolean,
+    is_disabled: Boolean,
+    border: String,
+    value: String,
+    modelValue: String,
+  },
+  data() {
+    return {
+      values: "",
+      p_invalid: "",
+    };
+  },
+  created() {
+    this.values = this.modelValue;
+  },
+  components: {
+    InputText,
+  },
+  emits: ["update:modelValue"],
+  watch: {
+    values: {
+      immediate: true,
+      handler(data) {
+        this.$emit("update:modelValue", data);
+      },
+    },
+    message_error: {
+      immediate: true,
+      handler(data) {
+        if (data) {
+          this.p_invalid = "p-invalid";
+        }
+      },
+    },
+  },
+  methods: {},
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped></style>
