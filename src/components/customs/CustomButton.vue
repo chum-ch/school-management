@@ -45,6 +45,8 @@
             ? 'pi pi-trash'
             : cancel_icon
             ? 'pi pi-times'
+            : plus_icon
+            ? 'pi pi-plus'
             : ''
         "
       />
@@ -57,7 +59,12 @@ import Button from "primevue/button";
 
 export default {
   name: "CustomButton",
-  emits: ["onClick"],
+  components: {
+    Button,
+  },
+  data() {
+    return {};
+  },
   props: {
     badge: String,
     msg: String,
@@ -73,6 +80,7 @@ export default {
     email_icon: Boolean,
     delete_icon: Boolean,
     cancel_icon: Boolean,
+    plus_icon: Boolean,
     is_link: Boolean,
     disabled: Boolean,
     secondary: Boolean,
@@ -86,14 +94,9 @@ export default {
     text: Boolean,
     outlined: Boolean,
   },
-  data() {
-    return {};
-  },
-  created() {},
-  components: {
-    Button,
-  },
+  emits: ["onClick"],
   watch: {},
+  created() {},
   methods: {},
 };
 </script>

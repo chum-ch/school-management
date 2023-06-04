@@ -42,6 +42,16 @@
 import Password from "primevue/password";
 export default {
   name: "CustomPassword",
+  components: {
+    Password,
+  },
+  data() {
+    return {
+      values: "",
+      p_invalid: ""
+    };
+  },
+  
   props: {
     msg: String,
     modelValue: String,
@@ -50,18 +60,6 @@ export default {
     label: String,
     message_error: String,
     eye_icon: Boolean,
-  },
-  data() {
-    return {
-      values: "",
-      p_invalid: ""
-    };
-  },
-  created() {
-    this.values = this.modelValue;
-  },
-  components: {
-    Password,
   },
   emits: ["update:modelValue"],
   watch: {
@@ -79,6 +77,9 @@ export default {
         }
       },
     },
+  },
+  created() {
+    this.values = this.modelValue;
   },
   methods: {},
 };

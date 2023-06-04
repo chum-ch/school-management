@@ -1,111 +1,199 @@
 <template>
-  <div class="hello">
+  <div>
+    <div class="action flex justify-content-between flex-wrap mx-3">
+      <div class="flex justify-content-start flex-wrap">
+        <custom-button
+          :label="'បង្កើតថ្មី'"
+          class="mt-3 me-3"
+          @onClick="($event) => $emit('onClickCreate', $event)"
+        />
+        <custom-button
+          :label="'កែប្រែ'"
+          class="mt-3 me-3"
+          @onClick="($event) => $emit('onClickEdit', $event)"
+          :outlined="true"
+          :disabled="disabledDetails"
+        />
+        <custom-button
+          :label="'លុបចោល'"
+          class="mt-3 me-3"
+          @onClick="($event) => $emit('onClickDelete', selection)"
+          :danger="true"
+          :outlined="true"
+          :disabled="disabledDelete"
+        />
+        <custom-button
+          :label="'មើលបន្ថែមទៀត'"
+          class="mt-3 me-3"
+          @onClick="($event) => $emit('onClickDetails', selection)"
+          :warning="true"
+          :outlined="true"
+          :disabled="disabledDetails"
+        />
+      </div>
+      <custom-input-text
+        v-model="filters['global'].value"
+        placeholder="ស្វែងរក ..."
+        :show_icon="true"
+        :left_icon="true"
+        :search_icon="true"
+      />
+    </div>
     <h1>{{ msg }}</h1>
-    <div class="">
+    <div class="m-1">
       <DataTable
-        :value="customers"
+        :value="table_data"
         scrollable
         scrollHeight="500px"
+        class="p-datatable-sm"
+        tableStyle="min-width: 50rem"
         style="min-width: 50rem"
-        v-model:selection="selectedProduct"
-        dataKey="id" tableStyle="min-width: 50rem"
+        columnResizeMode="fit"
+        :resizableColumns="true"
+        :dataKey="data_key"
+        @row-select="selectedRow"
+        @row-unselect="unSelectedRow"
+        @row-select-all="selectedAllRows"
+        @row-unselect-all="unSelectedAllRows"
         paginator
-        :rows="10"
-        :options="{ label: 'Small', value: 'small', class: 'sm' }"
+        :rows="9"
+        :rowsPerPageOptions="[9, 50, 100]"
+        paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
+        currentPageReportTemplate="ការបង្ហាញពី {first} ទៅ {last} នៃចំនួនសរុប {totalRecords}"
+        :globalFilterFields="globalFilterFields"
+        v-model:selection="selection"
+        v-model:filters="filters"
       >
-      <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
-        <Column field="name" header="Name"></Column>
-        <Column
-          field="country.name"
-          header="Country"
-        ></Column>
-        <Column
-          field="representative.name"
-          header="Representative"
-        ></Column>
-        <Column field="company" header="Company"></Column>
+      
+        <template #empty>
+        <div v-if="table_data.length !==0">
+          ពាក្យ <span class="text-danger fw-bolder"> {{ filters["global"].value }}</span> រកមិនឃើញនោះទេ! 🥺
+        </div>
+          </template
+        >
+        <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+        <template v-for="(item, index) in columns" :key="index">
+          <Column
+            :field="item.field"
+            :header="item.header"
+            headerStyle="width: 3rem"
+          >
+          </Column>
+        </template>
       </DataTable>
     </div>
-
-
   </div>
 </template>
 
 <script>
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
+import DataTable from "primevue/datatable";
+import Column from "primevue/column";
+import { FilterMatchMode } from "primevue/api";
 // import ColumnGroup from 'primevue/columngroup';   // optional
 // import Row from 'primevue/row';                   // optional
 
 export default {
-  name: "CustomTable",
-  props: {
-    msg: String,
-    placeholder: String,
-    is_required: Boolean,
-    label: String,
-    message_error: String,
-    user_icon: Boolean,
-    search_icon: Boolean,
-    spinner_icon: Boolean,
-    has_icon: Boolean,
-    right_icon: Boolean,
-    // sm_size: Boolean,
-    // lg_size: Boolean,
-    is_disabled: Boolean,
-    border: String,
-    value: String,
-    modelValue: String,
-  },
   data() {
     return {
-      selectedProduct:[],
-      values: "",
-      customers: [
-       
-       {
-        id:"111",
-         name: 'Hello',
-         representative: { name: "hello" },
-         country: { name: "Hello" },
-         company:'Hello'
-       },
-       {
-        id:"22",
-         name: 'Hello',
-         representative: { name: "hello" },
-         country: { name: "Hello" },
-         company:'Hello'
-       },
-       
-     ],
+      // Table
+      selection: [],
+      filters: null,
+      globalFilterFields: [null],
+      // Button
+      disabledDelete: true,
+      disabledDetails: true,
     };
   },
-  created() {
-    this.values = this.modelValue;
-  },
+  name: "CustomTable",
   components: {
     DataTable,
     Column,
     // ColumnGroup,
     // Row
   },
-  emits: ["update:modelValue"],
+  errorCaptured(error, vm, info) {
+    console.error("Error", error, vm, info);
+    return true; // Return true to continue propagating the error
+  },
+  props: {
+    msg: String,
+    table_data: Array,
+    columns: Array,
+    data_key: String
+  },
+  emits: ["selected-row-data", "onClickCreate", "onClickDelete", "onClickDetails", "onClickEdit"],
   watch: {
-    values: {
+    selection: {
       immediate: true,
       handler(data) {
-        this.$emit("update:modelValue", data);
+        if (data.length > 0) {
+          this.disabledDelete = false;
+          if (data.length > 1) {
+            this.disabledDetails = true;
+          } else {
+            this.disabledDetails = false;
+          }
+        } else {
+          this.disabledDelete = true;
+          this.disabledDetails = true;
+        }
       },
     },
   },
-  methods: {},
+  created() {
+    if (this.columns) {
+      this.columns.forEach((element) => {
+        this.globalFilterFields.push(element.field);
+      });
+    }
+    this.initFilters();
+  },
+  methods: {
+    selectedRow() {
+      this.emitSelectedRowData("selectRow");
+    },
+    unSelectedRow() {
+      // this.selectedRowData = this.selectedRowData.filter(item => item.index !== event.index);
+      this.emitSelectedRowData("unSelectRow");
+    },
+    unSelectedAllRows() {
+      this.disabledDetails =true
+      this.disabledDelete =true
+      this.selection =[]
+      this.emitSelectedRowData("unSelectAllRow");
+    },
+    selectedAllRows(event) {
+      this.selection = event.data;
+      this.emitSelectedRowData("selectAllRow");
+    },
+
+    emitSelectedRowData(checked) {
+      if (
+        checked === "selectRow" ||
+        checked === "unSelectRow" ||
+        checked === "selectAllRow"
+      ) {
+        this.$emit("selected-row-data", this.selection);
+      } else {
+        this.$emit("selected-row-data", []);
+      }
+    },
+    initFilters() {
+      this.filters = {
+        global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+      };
+    },
+  },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
+* {
+  margin: 0;
+  padding: 0;
+}
+/* h3 {
   margin: 40px 0 0;
 }
 ul {
@@ -118,5 +206,5 @@ li {
 }
 a {
   color: #42b983;
-}
+} */
 </style>

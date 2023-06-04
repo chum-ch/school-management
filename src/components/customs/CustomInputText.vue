@@ -35,8 +35,10 @@
       />
     </div>
     <small v-if="message_error !== ''" class="flex text-red-500">
-      <i :class="message_error ? 'pi pi-info-circle mr-1' : ''" />
-      {{ message_error }}</small
+      {{ message_error }}
+      <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 2px;" />
+      
+      </small
     >
   </div>
 </template>
@@ -44,6 +46,18 @@
 import InputText from "primevue/inputtext";
 export default {
   name: "CustomInputText",
+  components: {
+    InputText,
+  },
+  data() {
+    return {
+      values: "",
+      p_invalid: "",
+    };
+  },
+  created() {
+    this.values = this.modelValue;
+  },
   props: {
     msg: String,
     placeholder: String,
@@ -59,19 +73,7 @@ export default {
     is_disabled: Boolean,
     border: String,
     value: String,
-    modelValue: String,
-  },
-  data() {
-    return {
-      values: "",
-      p_invalid: "",
-    };
-  },
-  created() {
-    this.values = this.modelValue;
-  },
-  components: {
-    InputText,
+    modelValue: [String, Number],
   },
   emits: ["update:modelValue"],
   watch: {

@@ -45,7 +45,7 @@
         >
       </p>
       <div class="d-flex justify-content-end mb-4">
-        <custom-button @click="$event=>loginForm()" :label="'បោះបង់'" class="mr-6" :text="true" />
+        <custom-button @click="$event=>loginForm()" :label="'បោះបង់'" class="mr-3" :outlined="true" />
         <custom-button :label="'កំណត់ជាថ្មី'" class="w-4" />
       </div>
     </form>

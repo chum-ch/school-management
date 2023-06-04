@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div>
     <div class="router-view ">
       <router-view />
     </div>
@@ -11,7 +11,7 @@
 export default {
   data() {
     return {
-      breadCrumb: [],
+      // Bread Crumb
     };
   },
   emits: [],

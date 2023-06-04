@@ -3,9 +3,13 @@ import HomeView from '../views/HomeView.vue'
 import LoginForm from '../components/authentications/LoginForm.vue'
 import ResetPasswordForm from '../components/authentications/ResetPasswordForm.vue'
 // Import other router
-import StudentRouter from '../components/students/route';
+import StudentsRouter from '../components/students/route';
+import TrainersRouter from '../components/trainers/route'
+import CleanerRouter from '../components/cleaner/route'
 const routes = [
-  ...StudentRouter,
+  ...StudentsRouter,
+  ...TrainersRouter,
+  ...CleanerRouter,
   {
     path: '/',
     name: 'home',

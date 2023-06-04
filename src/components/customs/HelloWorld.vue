@@ -10,7 +10,13 @@
 
 <script>
 export default {
-  name: "CustomInputText",
+  components: {
+  },
+  data() {
+    return {
+      values: "",
+    };
+  },
   props: {
     msg: String,
     placeholder: String,
@@ -29,17 +35,6 @@ export default {
     value: String,
     modelValue: String,
   },
-  data() {
-    return {
-      values: "",
-    };
-  },
-  created() {
-    this.values = this.modelValue;
-  },
-  components: {
-    InputText,
-  },
   emits: ["update:modelValue"],
   watch: {
     values: {
@@ -48,6 +43,9 @@ export default {
         this.$emit("update:modelValue", data);
       },
     },
+  },
+  created() {
+    this.values = this.modelValue;
   },
   methods: {},
 };
