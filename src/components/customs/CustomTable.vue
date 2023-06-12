@@ -41,14 +41,14 @@
     </div>
     <h1>{{ msg }}</h1>
     <div class="m-1">
+      <!-- showGridlines -->
       <DataTable
         :value="table_data"
         scrollable
         scrollHeight="500px"
         class="p-datatable-sm"
         tableStyle="min-width: 50rem"
-        style="min-width: 50rem"
-        columnResizeMode="fit"
+        :rowHover="true"
         :resizableColumns="true"
         :dataKey="data_key"
         @row-select="selectedRow"

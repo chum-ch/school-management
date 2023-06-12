@@ -5,6 +5,7 @@
       <Button
         @click="($event) => $emit('onClick', $event)"
         :badge="badge"
+        :type="type ? type : 'button'"
         v-show="hide ? false : true"
         :raised="raised"
         :label="label"
@@ -93,6 +94,7 @@ export default {
     rounded: Boolean,
     text: Boolean,
     outlined: Boolean,
+    type: String,
   },
   emits: ["onClick"],
   watch: {},

@@ -1,15 +1,18 @@
-import { createRouter, createWebHashHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
-import LoginForm from '../components/authentications/LoginForm.vue'
-import ResetPasswordForm from '../components/authentications/ResetPasswordForm.vue'
+import { createRouter, createWebHashHistory } from 'vue-router';
+import HomeView from '../views/HomeView.vue';
+import LoginForm from '../components/authentications/LoginForm.vue';
+import ResetPasswordForm from '../components/authentications/ResetPasswordForm.vue';
 // Import other router
 import StudentsRouter from '../components/students/route';
-import TrainersRouter from '../components/trainers/route'
-import CleanerRouter from '../components/cleaner/route'
+import TrainersRouter from '../components/trainers/route';
+import CleanersRouter from '../components/cleaners/route';
+import SchedulesRouter from '../components/schedules/route';
+
 const routes = [
   ...StudentsRouter,
   ...TrainersRouter,
-  ...CleanerRouter,
+  ...CleanersRouter,
+  ...SchedulesRouter,
   {
     path: '/',
     name: 'home',

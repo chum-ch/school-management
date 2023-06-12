@@ -70,12 +70,12 @@ export default {
           header: "ភេទ",
         },
         {
-          field: "Class",
-          header: "ថ្នាក់រៀន",
-        },
-        {
           field: "Email",
           header: "សារអេឡិចត្រូនិច",
+        },
+        {
+          field: "Class",
+          header: "ថ្នាក់រៀន",
         },
       ],
     };

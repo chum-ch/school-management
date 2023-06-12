@@ -1,20 +1,28 @@
 <template>
   <div>
     <custom-navigation :breadCrumb="breadCrumb" />
-  <div class="hello flex">
-    <h1>{{ msg }}</h1>
-    <custom-details
-    :full_name="fullName"
-    :email="email"
-    >
-    <template #view_info>
-      <custom-view-info :items_view_info="viewInfo" />
-    </template>
-    <template #view_tab>
-      <tab-menu-primevue v-model:activeIndex="active" :model="items" />
-    </template>
-    </custom-details>
-  </div>
+    <div class="hello flex">
+      <h1>{{ msg }}</h1>
+      <custom-details :full_name="fullName" :email="email">
+        <template #view_info>
+          <custom-view-info :items_view_info="viewInfo" />
+        </template>
+        <template #view_tab>
+          <tab-view-primevue>
+            <tab-panel-primevue header="កាលវិភាគ">
+              <custom-full-calendar/>
+            </tab-panel-primevue>
+            <tab-panel-primevue header="គ្រួសារ" class="col-12"> F
+             </tab-panel-primevue>
+            <tab-panel-primevue header="ការសិក្សា">
+            <custom-button/>
+            S
+             </tab-panel-primevue>
+            <tab-panel-primevue header="អវត្តមាន"> A </tab-panel-primevue>
+          </tab-view-primevue>
+        </template>
+      </custom-details>
+    </div>
   </div>
 </template>
 
@@ -26,37 +34,8 @@ export default {
       fullName: "",
       email: "",
       values: "",
-      // BreadCrum 
-       // Bread Crumb
-       breadCrumb: [{ label: "សិស្ស", to: "/students" }],
-      // Tabl
-      active: 0,
-      items: [
-        {
-          label: "គ្រួសារ",
-          command: () => {
-            this.testingClick();
-          },
-        },
-        {
-          label: "ការសិក្សា",
-          command: () => {
-            this.testingClick();
-          },
-        },
-        {
-          label: "អវត្តមាន",
-          command: () => {
-            this.testingClick();
-          },
-        },
-        {
-          label: "កាលវិភាគ",
-          command: () => {
-            this.testingClick();
-          },
-        },
-      ],
+      // Bread Crum
+      breadCrumb: [{ label: "សិស្ស", to: "/students" }],
       viewInfo: [
         {
           label: "លេខសម្គាល់",
@@ -85,8 +64,7 @@ export default {
     msg: String,
   },
   emits: [""],
-  watch: {
-  },
+  watch: {},
   created() {
     this.detailsStudent(this.$route.params.id);
   },
@@ -96,18 +74,21 @@ export default {
     },
     async detailsStudent(id) {
       try {
-        if(id){
-          let getStuent = await this.$api.school
-            .student()
-            .getStudent(id);
+        if (id) {
+          let getStuent = await this.$api.school.student().getStudent(id);
           if (getStuent.data) {
-            this.fullName = `${getStuent.data[0].LastName} ${getStuent.data[0].FirstName}`
-            this.email = `${getStuent.data[0].Email}`
-           this.viewInfo = this.$globalFunction.sectionViewInfo(this.viewInfo, getStuent.data[0])
-           this.breadCrumb.push({ label: `${this.fullName}`, to: `/students/${this.$route.params.id}` })
+            this.fullName = `${getStuent.data[0].LastName} ${getStuent.data[0].FirstName}`;
+            this.email = `${getStuent.data[0].Email}`;
+            this.viewInfo = this.$globalFunction.sectionViewInfo(
+              this.viewInfo,
+              getStuent.data[0]
+            );
+            this.breadCrumb.push({
+              label: `${this.fullName}`,
+              to: `/students/${this.$route.params.id}`,
+            });
           }
         }
-        
       } catch (error) {
         console.log("Error details student", error);
       }

@@ -26,7 +26,8 @@ import Avatar from 'primevue/avatar';
 import Breadcrumb from 'primevue/breadcrumb';
 import Sidebar from 'primevue/sidebar';
 import ScrollPanel from 'primevue/scrollpanel';
-
+import TabView from 'primevue/tabview';
+import TabPanel from 'primevue/tabpanel';
 
 // Custom component
 import NavigationView from "./views/NavigationView.vue";
@@ -37,6 +38,7 @@ import CustomTable from './components/customs/CustomTable.vue';
 import CustomDialog from './components/customs/CustomDialog.vue';
 import CustomViewInfo from './components/customs/CustomViewInfo.vue';
 import CustomDetails from './components/customs/CustomDetails.vue';
+import CustomFullCalendar from './components/customs/CustomFullCalendar.vue';
 const app = createApp(App);
 // Config Axios 
 // const axiosInstance = axios.create({
@@ -60,6 +62,8 @@ app.component('avatar-primevue', Avatar);
 app.component('breadcrumb-primevue', Breadcrumb);
 app.component('sidebar-primevue', Sidebar);
 app.component('scrollpanel-primevue', ScrollPanel);
+app.component('tab-view-primevue', TabView);
+app.component('tab-panel-primevue', TabPanel);
 
 // Custom
 app.component('custom-navigation', NavigationView);
@@ -70,6 +74,7 @@ app.component('custom-table', CustomTable);
 app.component('custom-dialog', CustomDialog);
 app.component('custom-view-info', CustomViewInfo);
 app.component('custom-details', CustomDetails);
+app.component('custom-full-calendar', CustomFullCalendar);
 app.use(PrimeVue);
 app.use(ToastService);
 app.use(router).mount('#app')
