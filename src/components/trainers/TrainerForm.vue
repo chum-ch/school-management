@@ -1,10 +1,10 @@
 <template>
   <div class="hello">
     <h1>{{ msg }}</h1>
-    <!-- Dialog student form  -->
+    <!-- Dialog trainer form  -->
     <custom-dialog
       ref="dialogTrainerForm"
-      :modal_header="'ទម្រង់ពត៌មាន សិស្សានុសិស្ស'"
+      :modal_header="'Trainer Form'"
       @onClickDialogSubmit="createTrainerInfo"
       @onClickCloseDialog="closeDialogTrainerForm"
       :footer_label="footer_label"
@@ -12,46 +12,46 @@
       <template #bodyDialog>
         <div class="flex flex-wrap">
           <custom-input-text
-            :placeholder="'នាមត្រកូល'"
-            :label="'ទាមទារបញ្ចូល នាមត្រកូល'"
+            :placeholder="'......'"
+            :label="'Last name'"
             :required="true"
             v-model="trainerForm.LastName"
             :message_error="message.LastName"
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'នាមខ្លួន'"
-            :label="'ទាមទារបញ្ចូល នាមខ្លួន'"
+            :placeholder="'......'"
+            :label="'First name'"
             :required="true"
             v-model="trainerForm.FirstName"
             :message_error="message.FirstName"
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'ភេទ'"
-            :label="'ទាមទារបញ្ចូល ភេទ'"
+            :placeholder="'......'"
+            :label="'Gender'"
             :required="true"
             v-model="trainerForm.Gender"
             :message_error="message.Gender"
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'ខេត្ដ'"
-            :label="'ទាមទារបញ្ចូល ខេត្ដ'"
+            :placeholder="'......'"
+            :label="'Province'"
             v-model="trainerForm.Province"
             :message_error="message.Province"
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'លេខទូរសព្ទ'"
-            :label="'ទាមទារបញ្ចូល លេខទូរសព្ទ'"
+            :placeholder="'......'"
+            :label="'Phone'"
             v-model="trainerForm.Phone"
             :message_error="message.Phone"
             class="col-12"
           />
           <custom-input-text
-            :placeholder="'សារអេឡិចត្រូនិច'"
-            :label="'បញ្ចូល សារអេឡិចត្រូនិច'"
+            :placeholder="'......'"
+            :label="'Email'"
             v-model="trainerForm.Email"
             class="col-12"
           />
@@ -66,7 +66,9 @@ export default {
   components: {},
   data() {
     return {
-      // Form student
+      schoolId: this.$route.params.schoolId,
+      trainerID: "",
+      // Form trainer
       trainerForm: {
         FirstName: "",
         LastName: "",
@@ -96,25 +98,27 @@ export default {
       this.$refs.dialogTrainerForm.openDialog();
     },
     closeDialogTrainerForm() {
+      this.clearTrainerInfoForm()
       this.footer_label = "";
       this.$refs.dialogTrainerForm.closeDialog();
-      this.$emit("updatedTrainer");
+      this.$emit("updatedTrainer", { CloseDialog: true });
     },
-    // Call student form info from parent
+    // Call trainer form info from parent
     trainerInfoForm(data = "") {
       try {
         if (!data) {
           this.clearTrainerInfoForm();
         } else {
-          this.footer_label = "កែប្រែ";
+          this.footer_label = "Eidt";
           this.trainerForm.FirstName = data.FirstName;
           this.trainerForm.LastName = data.LastName;
           this.trainerForm.Email = data.Email;
           this.trainerForm.Gender = data.Gender;
           this.trainerForm.Province = data.Province;
           this.trainerForm.Phone = data.Phone;
-          // Get studentID
-          this.trainerForm.trainersID = data.trainersID;
+          // Get trainer ID
+          this.trainerID = data.TRAINERS_ID
+          
         }
         this.openDialogTrainerForm();
         
@@ -129,41 +133,33 @@ export default {
           this.trainerForm.LastName &&
           this.trainerForm.Gender
         ) {
-          console.log('data', this.trainerForm);
-          for (const [key, value] of Object.entries(this.trainerForm)) {
-            if (!value) {
-              this.trainerForm[key] = "";
-            }
-          }
           if (!this.footer_label) {
-            await this.$api.school.trainer().createTrainer(this.trainerForm);
+            await this.$api.trainer.createTrainer(this.schoolId, this.trainerForm);
           } else {
-            await this.$api.school
-              .trainer()
-              .updateTrainer(this.trainerForm, this.trainerForm.trainersID);
+            await this.$api.trainer.updateTrainer(this.schoolId, this.trainerForm, this.trainerID);
           }
           this.$emit("updatedTrainer");
           this.closeDialogTrainerForm();
         } else {
           if (!this.trainerForm.FirstName) {
-            this.message.FirstName = "ត្រូវតែបញ្ចូល នាមខ្លួន";
+            this.message.FirstName = "First name is required";
           } else {
             this.message.FirstName = "";
           }
           if (!this.trainerForm.LastName) {
-            this.message.LastName = "ត្រូវតែបញ្ចូល នាមត្រកូល";
+            this.message.LastName = "Last name is required";
           } else {
             this.message.LastName = "";
           }
           if (!this.trainerForm.Gender) {
-            this.message.Gender = "ត្រូវតែបញ្ចូល ភេទ";
+            this.message.Gender = "Gender is required";
           } else {
             this.message.Gender = "";
           }
         }
         
       } catch (error) {
-        console.log("Error create student info", error);
+        console.log("Error create trainer info", error);
       }
     },
     clearTrainerInfoForm() {
@@ -176,18 +172,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
+
 </style>

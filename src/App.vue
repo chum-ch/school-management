@@ -1,25 +1,50 @@
 <template>
   <div>
-    <div class="router-view ">
+    <CustomSpinner
+    :isLoading="isLoading"
+    />
+    <div class="router-view">
       <router-view />
     </div>
   </div>
 </template>
 
 <script>
-// import axios from './api/index';
+import axios from "axios";
+import CustomSpinner from "./components/customs/CustomSpinner.vue";
 export default {
+  setup() {
+   },
+
   data() {
     return {
-      // Bread Crumb
+      isLoading: false
     };
   },
   emits: [],
-  components: {},
-  created() {
-    
+  components: {
+    CustomSpinner
   },
-  methods: {},
+  created() {
+    // Add an Axios interceptor to show/hide the spinner
+    axios.interceptors.request.use((config) => {
+      this.isLoading = true
+      return config;
+    });
+
+    axios.interceptors.response.use(
+      (response) => {
+        this.isLoading = false
+        return response;
+      },
+      (error) => {
+        return Promise.reject(error);
+      }
+    );
+  },
+  methods: {
+   
+  },
 };
 </script>
 

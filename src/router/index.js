@@ -3,18 +3,22 @@ import HomeView from '../views/HomeView.vue';
 import LoginForm from '../components/authentications/LoginForm.vue';
 import ResetPasswordForm from '../components/authentications/ResetPasswordForm.vue';
 // Import other router
-import StudentsRouter from '../components/students/route';
+import SchoolsRouter from '../components/schools/route';
 import TrainersRouter from '../components/trainers/route';
+import RoomssRouter from '../components/rooms/route';
+import StudentsRouter from '../components/students/route';
 import CleanersRouter from '../components/cleaners/route';
 import SchedulesRouter from '../components/schedules/route';
 
 const routes = [
-  ...StudentsRouter,
+  ...SchoolsRouter,
+  ...RoomssRouter,
   ...TrainersRouter,
+  ...StudentsRouter,
   ...CleanersRouter,
   ...SchedulesRouter,
   {
-    path: '/',
+    path: '/schools/:schoolId/manages',
     name: 'home',
     component: HomeView
   },

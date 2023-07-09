@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FullCalendar style="width: 820px;" :options="calendarOptions" />
+    <FullCalendar class="m-2" :options="calendarOptions" />
   </div>
 </template>
 
@@ -69,9 +69,9 @@ export default defineComponent({
         // Toolbar
         titleFormat: { year: "numeric", month: "long", day: "numeric" },
         headerToolbar: {
-            // left: "today,timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth",
-          start: "prev,next today",
-          end: "",
+          // left: "today,timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth",
+          start: "prev,next today timeGridWeek",
+          end: "dayGridMonth,multiMonthYear,listMonth",
           center: "title",
         },
         views: {
@@ -80,11 +80,9 @@ export default defineComponent({
           //   dayGridWeek: { buttonText: "Week" },
           //   listMonth: { buttonText: "Event" },
         },
-
       },
     };
   },
-
 
   methods: {
     handleDateClick: function (arg) {
@@ -93,8 +91,10 @@ export default defineComponent({
   },
 });
 </script>
-<style >
-.fc .fc-col-header-cell-cushion, .fc-timegrid-axis-cushion, .fc-daygrid-day-number{
+<style>
+.fc .fc-col-header-cell-cushion,
+.fc-timegrid-axis-cushion,
+.fc-daygrid-day-number {
   text-decoration: none;
   color: gray;
 }

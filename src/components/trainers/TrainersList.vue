@@ -1,4 +1,4 @@
-<template lang="">
+<template>
     <div>
          <!-- Navigation with breadCrum  -->
       <custom-navigation :breadCrumb="breadCrumb" />
@@ -11,13 +11,28 @@
           @selected-row-data="selectedRowData"
           @onClickCreate="onClickCreateTrainer"
           @onClickEdit="onClickEditTrainer"
-          @onClickDelete="onClickDeleteTrainer"
+          @onClickDelete="openDialogDeleteTrainer"
           @onClickDetails="onClickDetailsTrainer"
-          :data_key="dataKey"
         />
       </div>
-      <!-- Chil student form  -->
-      <TrainerForm ref="toTrainerForm" @updatedTrainer="getListTrainers" />
+      <!-- Chil trainer form  -->
+      <TrainerForm ref="toTrainerForm" @updatedTrainer="updatedTrainer" />
+         <!-- Dialog delete trainer  -->
+         <custom-dialog
+        ref="dialogDeleteTrainer"
+        @onClickDialogSubmit="deleteTrainer()"
+        :danger="true"
+        @onClickCloseDialog="closeDialogDeleteTrainer()"
+        :is_delete="true"
+        :footer_label="'Delete'"
+        :modal_header="'Delete Trainer'"
+      >
+        <template #bodyDialog>
+          <div class="text-center mt-4">
+            You was selected  {{ selectedTrainers.length }} to delete.
+          </div>
+        </template>
+      </custom-dialog>
     </div>
 </template>
 <script>
@@ -28,36 +43,36 @@ export default {
   },
   data() {
     return {
+      schoolId: this.$route.params.schoolId,
        // Bread Crumb
-       breadCrumb: [{ label: "លោក-អ្នក គ្រូ", to: "/trainers" }],
+       breadCrumb: [],
        // Table
-       dataKey: "trainersID",
       selectedTrainers: [],
       tableDataTrainers: [],
       columnsTrainer:[
         {
           field: "LastName",
-          header: "នាមត្រកូល",
+          header: "Last name",
         },
         {
           field: "FirstName",
-          header: "នាមខ្លួន",
+          header: "First name",
         },
         {
           field: "Gender",
-          header: "ភេទ",
+          header: "Gender",
         },
         {
           field: "Phone",
-          header: "លេខទូរសព្ទ",
+          header: "Phone",
         },
         {
           field: "Email",
-          header: "សារអេឡិចត្រូនិច",
+          header: "Email",
         },
         {
           field: "Province",
-          header: "ខេត្ត",
+          header: "Province",
         },
       ],
     };
@@ -65,7 +80,7 @@ export default {
   props: {},
   watch: {},
   created() {
-    this.getListTrainers()
+    this.getSchoolDetails(this.schoolId)
   },
   methods: {
     onClickCreateTrainer() {
@@ -76,9 +91,10 @@ export default {
       this.$refs.toTrainerForm.trainerInfoForm(this.selectedTrainers[0]);
     },
     onClickDetailsTrainer(event) {
-      this.$router.push(`/trainers/${event[0].trainersID}`);
+      console.log('details', event);
+      // this.$router.push(`/trainers/${event[0].trainersID}`);
     },
-    unSelecteRowStudent() {
+    unSelecteRowTrainer() {
       this.$refs.toCallMethodUnSelectedRow.unSelectedAllRows();
     },
     
@@ -89,17 +105,46 @@ export default {
     selectedRowData(data) {
       this.selectedTrainers = data;
     },
+    async getSchoolDetails(schoolId) {
+      let school = await this.$api.school.getSchool(schoolId)
+      if(school && school.data && Object.keys(school.data).length > 0){
+        this.breadCrumb = [];
+        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Magnages', to: `/schools/${schoolId}/manages` }, { label: 'Trainers', to: `/schools/${schoolId}/trainers` });
+        this.getListTrainers()
+      }
+    },
     async getListTrainers() {
       try {
-        let trainers = await this.$api.school.trainer().listTrainers();
-        if (trainers.data) {
+        let trainers = await this.$api.trainer.listTrainers(this.schoolId);
+        if (trainers && trainers.data && trainers.data.length > 0) {
           this.tableDataTrainers = trainers.data;
         }
-        this.unSelecteRowStudent();
+        this.unSelecteRowTrainer();
       } catch (error) {
         console.log('Error list trainer', error);
       }
       
+    },
+    updatedTrainer(event){
+      if(event && event.CloseDialog){
+        this.unSelecteRowTrainer();
+      } else {
+        this.getSchoolDetails(this.schoolId)
+      }
+    },
+    openDialogDeleteTrainer() {
+      this.$refs.dialogDeleteTrainer.openDialog();
+    },
+    closeDialogDeleteTrainer() {
+      this.$refs.dialogDeleteTrainer.closeDialog();
+      this.unSelecteRowTrainer();
+    },
+    async deleteTrainer(){
+      for (let item of this.selectedTrainers){
+        await this.$api.trainer.deleteTrainer(this.schoolId, item.TRAINERS_ID);
+      }
+      this.closeDialogDeleteTrainer();
+      this.getSchoolDetails(this.schoolId);
     },
   },
 };

@@ -4,7 +4,7 @@
     <!-- Dialog student form  -->
     <custom-dialog
       ref="dialogStudentForm"
-      :modal_header="'ទម្រង់ពត៌មាន សិស្សានុសិស្ស'"
+      :modal_header="'Student Form'"
       @onClickDialogSubmit="createStudentInfo"
       @onClickCloseDialog="closeDialogStudentForm"
       :footer_label="footer_label"
@@ -12,24 +12,24 @@
       <template #bodyDialog>
         <div class="flex flex-wrap">
           <custom-input-text
-            :placeholder="'នាមត្រកូល'"
-            :label="'ទាមទារបញ្ចូល នាមត្រកូល'"
+            :placeholder="'......'"
+            :label="'Last name'"
             :required="true"
             v-model="studentForm.LastName"
             :message_error="message.LastName"
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'នាមខ្លួន'"
-            :label="'ទាមទារបញ្ចូល នាមខ្លួន'"
+            :placeholder="'.......'"
+            :label="'First name'"
             :required="true"
             v-model="studentForm.FirstName"
             :message_error="message.FirstName"
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'ភេទ'"
-            :label="'ទាមទារបញ្ចូល ភេទ'"
+            :placeholder="'.......'"
+            :label="'Gender'"
             :required="true"
             v-model="studentForm.Gender"
             :message_error="message.Gender"
@@ -42,14 +42,14 @@
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'ថ្នាក់រៀន'"
-            :label="'ទាមទារបញ្ចូល ថ្នាក់រៀន'"
+            :placeholder="'.......'"
+            :label="'Class'"
             v-model="studentForm.Class"
             class="col-6"
           />
           <custom-input-text
-            :placeholder="'សារអេឡិចត្រូនិច'"
-            :label="'បញ្ចូល សារអេឡិចត្រូនិច'"
+            :placeholder="'.......'"
+            :label="'Email'"
             v-model="studentForm.Email"
             class="col-12"
           />
@@ -64,6 +64,8 @@ export default {
   components: {},
   data() {
     return {
+      schoolId: this.$route.params.schoolId,
+      studentID: "",
       // Form student
       studentForm: {
         ID: "",
@@ -95,9 +97,10 @@ export default {
       this.$refs.dialogStudentForm.openDialog();
     },
     closeDialogStudentForm() {
+      this.clearStudentInfoForm();
       this.footer_label = "";
       this.$refs.dialogStudentForm.closeDialog();
-      this.$emit("updatedStudent");
+      this.$emit("updatedStudent", { CloseDialog: true });
     },
     // Call student form info from parent
     studentInfoForm(data = "") {
@@ -105,7 +108,7 @@ export default {
         if (!data) {
           this.clearStudentInfoForm();
         } else {
-          this.footer_label = "កែប្រែ";
+          this.footer_label = "Edit";
           this.studentForm.FirstName = data.FirstName;
           this.studentForm.LastName = data.LastName;
           this.studentForm.Email = data.Email;
@@ -113,7 +116,7 @@ export default {
           this.studentForm.Class = data.Class;
           this.studentForm.ID = data.ID;
           // Get studentID
-          this.studentForm.studentsID = data.studentsID;
+          this.studentID = data.STUDENTS_ID;
         }
         this.openDialogStudentForm();
         
@@ -128,33 +131,28 @@ export default {
           this.studentForm.LastName &&
           this.studentForm.Gender
         ) {
-          for (const [key, value] of Object.entries(this.studentForm)) {
-            if (!value) {
-              this.studentForm[key] = "";
-            }
-          }
           if (!this.footer_label) {
-            await this.$api.school.student().createStudent(this.studentForm);
+            await this.$api.student.createStudent(this.schoolId, this.studentForm);
           } else {
-            await this.$api.school
-              .student()
-              .updateStudent(this.studentForm, this.studentForm.studentsID);
+            await this.$api
+              .student
+              .updateStudent(this.schoolId, this.studentForm, this.studentID);
           }
           this.$emit("updatedStudent");
           this.closeDialogStudentForm();
         } else {
           if (!this.studentForm.FirstName) {
-            this.message.FirstName = "ត្រូវតែបញ្ចូល នាមខ្លួន";
+            this.message.FirstName = "First name is required";
           } else {
             this.message.FirstName = "";
           }
           if (!this.studentForm.LastName) {
-            this.message.LastName = "ត្រូវតែបញ្ចូល នាមត្រកូល";
+            this.message.LastName = "Last name is required";
           } else {
             this.message.LastName = "";
           }
           if (!this.studentForm.Gender) {
-            this.message.Gender = "ត្រូវតែបញ្ចូល ភេទ";
+            this.message.Gender = "Gender is required";
           } else {
             this.message.Gender = "";
           }
@@ -174,18 +172,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>

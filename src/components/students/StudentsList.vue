@@ -16,7 +16,7 @@
         :data_key="dataKey"
       />
       <!-- Child student form  -->
-      <StudentForm ref="toStudentForm" @updatedStudent="getListStudent" />
+      <StudentForm ref="toStudentForm" @updatedStudent="updatedStudent" />
 
       <!-- Dialog delete student  -->
       <custom-dialog
@@ -25,12 +25,12 @@
         :danger="true"
         @onClickCloseDialog="closeDialogDeleteStudent"
         :is_delete="true"
-        :footer_label="'លុប ចោល'"
-        :modal_header="'ការលុបទិន្ន័យ'"
+        :footer_label="'Delete'"
+        :modal_header="'Delete Student'"
       >
         <template #bodyDialog>
           <div class="text-center mt-4">
-            អ្នកបានជ្រើសរើសសិស្សានុសិស្សចំនួន {{ selectedStudent.length }} ដើម្បីលុបចោល។
+            You was selected {{ selectedStudent.length }} to delete.
           </div>
         </template>
       </custom-dialog>
@@ -47,35 +47,36 @@ export default {
   data() {
     return {
        // Bread Crumb
-       breadCrumb: [{ label: "សិស្ស", to: "/students" }],
+       breadCrumb: [],
       // Table
+      schoolId: this.$route.params.schoolId,
       selectedStudent: [],
       tableDataStudents: [],
-      dataKey: "studentsID",
+      dataKey: "ID",
       columnsStudent: [
         {
           field: "ID",
-          header: "លេខសម្គាល់",
+          header: "Student's ID",
         },
         {
           field: "LastName",
-          header: "នាមត្រកូល",
+          header: "Last name",
         },
         {
           field: "FirstName",
-          header: "នាមខ្លួន",
+          header: "First name",
         },
         {
           field: "Gender",
-          header: "ភេទ",
+          header: "Gender",
         },
         {
           field: "Email",
-          header: "សារអេឡិចត្រូនិច",
+          header: "Email",
         },
         {
           field: "Class",
-          header: "ថ្នាក់រៀន",
+          header: "Class",
         },
       ],
     };
@@ -84,7 +85,7 @@ export default {
   emits: [],
   watch: {},
   created() {
-    this.getListStudent();
+    this.getSchoolDetails(this.schoolId);
   },
   methods: {
     onClickCreateStudent() {
@@ -94,7 +95,8 @@ export default {
       this.$refs.toStudentForm.studentInfoForm(this.selectedStudent[0]);
     },
     onClickDetailsStudent(event) {
-      this.$router.push(`/students/${event[0].studentsID}`);
+      console.log('details', event);
+      // this.$router.push(`/students/${event[0].studentsID}`);
     },
     unSelecteRowStudent() {
       this.$refs.toCallMethodUnSelectedRow.unSelectedAllRows();
@@ -102,17 +104,31 @@ export default {
     selectedRowData(data) {
       this.selectedStudent = data;
     },
-
+    async getSchoolDetails(schoolId) {
+      let school = await this.$api.school.getSchool(schoolId)
+      if(school && school.data && Object.keys(school.data).length > 0){
+        this.breadCrumb = [];
+        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Magnages', to: `/schools/${schoolId}/manages` }, { label: 'Students', to: `/schools/${schoolId}/students` })
+        this.getListStudent()
+      }
+    },
     async getListStudent() {
       try {
-        let students = await this.$api.school.student().listStudents();
-        if (students.data) {
-          this.tableDataStudents = students.data;
+        let students = await this.$api.student.listStudents(this.schoolId);
+        if(students && students.data && students.data.length > 0){
+          this.tableDataStudents = students.data
         }
         this.unSelecteRowStudent();
         
       } catch (error) {
         console.log("Error list student", error);
+      }
+    },
+    updatedStudent(event) {
+      if(event && event.CloseDialog) {
+       this.unSelecteRowStudent()
+      } else {
+        this.getSchoolDetails(this.schoolId);
       }
     },
     // Delete student
@@ -124,14 +140,13 @@ export default {
     },
     closeDialogDeleteStudent() {
       this.$refs.dialogDeleteStudent.closeDialog();
-      this.getListStudent();
     },
     async deleteStudent() {
       for (let item of this.selectedStudent) {
-        await this.$api.school.student().deleteStudent(item.studentsID);
+        await this.$api.student.deleteStudent(this.schoolId, item.STUDENTS_ID);
       }
       this.closeDialogDeleteStudent();
-      this.getListStudent();
+      this.getSchoolDetails(this.schoolId);
     },
   },
 };

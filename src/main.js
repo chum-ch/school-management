@@ -18,6 +18,12 @@ import "primeicons/primeicons.css";
 // Bootstrap
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
+// Vuetify
+import 'vuetify/styles'
+import { createVuetify } from 'vuetify'
+import * as components from 'vuetify/components'
+import * as directives from 'vuetify/directives'
+
 // Component primevue
 import TabMenu from 'primevue/tabmenu';
 import ToastService from 'primevue/toastservice';
@@ -54,6 +60,8 @@ app.config.globalProperties.$http = axios;
 app.config.globalProperties.$api = API(axios);
 // Set global function
 app.config.globalProperties.$globalFunction = utils
+
+
 // Register component
 // Primevue
 app.component('tab-menu-primevue', TabMenu);
@@ -75,6 +83,12 @@ app.component('custom-dialog', CustomDialog);
 app.component('custom-view-info', CustomViewInfo);
 app.component('custom-details', CustomDetails);
 app.component('custom-full-calendar', CustomFullCalendar);
+
+const vuetify = createVuetify({
+  components,
+  directives,
+})
+app.use(vuetify);
 app.use(PrimeVue);
 app.use(ToastService);
 app.use(router).mount('#app')

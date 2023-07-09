@@ -13,7 +13,7 @@
     
       <div class="card m-1 p-3 ">
         <div class="text-center text-danger" v-if="is_delete">
-          <span class="p-ml-2 me-1">ការលុបទិន្ន័យរបស់សិស្សានុសិស្ស</span>
+          <span class="p-ml-2 me-1">Delete</span>
           <i class="pi pi-exclamation-triangle text-center"></i>
         </div>
         <slot name="bodyDialog"> </slot>
@@ -23,12 +23,12 @@
         <div class="flex justify-content-end flex-wrap">
           <custom-button
             @onClick="$emit('onClickCloseDialog')"
-            :label="'បោះបង់'"
+            :label="'Cancel'"
             class="me-3"
             :outlined="true"
           />
           <custom-button
-            :label="footer_label ? footer_label : 'បង្កើតថ្មី'"
+            :label="footer_label ? footer_label : 'Submit'"
             :danger="danger"
             @onClick="($event) => $emit('onClickDialogSubmit', $event)"
           />
@@ -59,6 +59,7 @@ export default {
     footer_label: String,
     danger: Boolean,
     is_delete:Boolean,
+    title_delete: String
   },
   emits: ["onClickDialogSubmit", "onClickCloseDialog"],
   watch: {},

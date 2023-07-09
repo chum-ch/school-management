@@ -1,7 +1,7 @@
 <template>
   <div class="sticky top-0 z-5 blur">
     <div class=" d-flex justify-content-between align-items-center mx-3">
-      <h4>ប្រព័ន្ធគ្រប់គ្រងសាលារៀន</h4>
+      <h4>SMS</h4>
       <!-- <marquee width="60%" direction="left" height="" class=""
         >ប្រព័ន្ធគ្រប់គ្រងសាលារៀន សូមស្វាគមន៏!</marquee
       > -->

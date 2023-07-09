@@ -1,7 +1,7 @@
 <template>
   <div class="p-fluid">
     <h1>{{ msg }}</h1>
-    <div class="my-1">
+    <div class="my-1 text-white">
       <Button
         @click="($event) => $emit('onClick', $event)"
         :badge="badge"
@@ -105,18 +105,4 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
-h3 {
-  margin: 40px 0 0;
-}
-ul {
-  list-style-type: none;
-  padding: 0;
-}
-li {
-  display: inline-block;
-  margin: 0 10px;
-}
-a {
-  color: #42b983;
-}
 </style>

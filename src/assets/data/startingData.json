@@ -1,50 +1,20 @@
 [
   {
-    "path": "/students",
+    "name": "students",
     "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjIct9asHbaJe0FKC-sRsRG05dqUFqAI8_3WDLyB-x5kEsStDc",
-    "title": "សិស្សានុសិស្ស",
-    "description": "ការគ្រប់គ្រងលើ សិស្សានុសិស្ស ទាំងអស់នៅក្នុងសាលា ។"
+    "title": "Students",
+    "description": "Manage all students in school."
   },
   {
-    "path": "/trainers",
+    "name": "trainers",
     "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaTO-mXO-lPjxavDgafI2LFHFclb1-rUxshw0DFKhSREupDuKW",
-    "title": "លោកគ្រូ-អ្នកគ្រូ",
-    "description": "ការគ្រប់គ្រងលើ លោក-អ្នក គ្រូ ទាំងអស់នៅក្នុងសាលា ។"
+    "title": "Trainers",
+    "description": "Manage all trainers in school."
   },
   {
-    "path": "/cleaners",
-    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQJht7-wvWYzQG3073d6thFbdiPTEKC8-81bz5cuEaUJ7-vHVI",
-    "title": "អ្នកសម្អាត",
-    "description": "ការគ្រប់គ្រងលើ អ្នកសម្អាត ទាំងអស់នៅក្នុងសាលា ។"
-  },
-  {
-    "path": "/financials",
-    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRK54ecIytbo-fSmbZsAtmvW1KFrxRibms5cQOLNBTcvwd1snVB",
-    "title": "អ្នកគិតប្រាក់ខែ បុគ្គលិក",
-    "description": "ការគ្រប់គ្រងលើ អ្នកគិតប្រាក់ខែ បុគ្គលិក ទាំងអស់នៅក្នុងសាលា ។"
-  },
-  {
-    "path": "/classrooms",
+    "name": "rooms",
     "img": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQfoNJIa0Hw8OI0chJ3TndaqeR7nvOpjhU_kOkYGESXsSnuNp_E",
-    "title": "បន្ទប់រៀន",
-    "description": "ការគ្រប់គ្រងលើ បន្ទប់រៀន ទាំងអស់នៅក្នុងសាលា ។"
-  },
-  {
-    "path": "/classrooms",
-    "img": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQfoNJIa0Hw8OI0chJ3TndaqeR7nvOpjhU_kOkYGESXsSnuNp_E",
-    "title": "បន្ទប់រៀន",
-    "description": "ការគ្រប់គ្រងលើ បន្ទប់រៀន ទាំងអស់នៅក្នុងសាលា ។"
-  },
-  {
-    "path": "/classrooms",
-    "img": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQfoNJIa0Hw8OI0chJ3TndaqeR7nvOpjhU_kOkYGESXsSnuNp_E",
-    "title": "បន្ទប់រៀន",
-    "description": "ការគ្រប់គ្រងលើ បន្ទប់រៀន ទាំងអស់នៅក្នុងសាលា ។"
-  },
-  {
-    "path": "/classrooms",
-    "img": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQfoNJIa0Hw8OI0chJ3TndaqeR7nvOpjhU_kOkYGESXsSnuNp_E",
-    "title": "បន្ទប់រៀន",
-    "description": "ការគ្រប់គ្រងលើ បន្ទប់រៀន ទាំងអស់នៅក្នុងសាលា ។"
+    "title": "Rooms",
+    "description": "Manage all rooms in school"
   }
 ]

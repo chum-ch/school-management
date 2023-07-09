@@ -3,19 +3,19 @@
     <div class="action flex justify-content-between flex-wrap mx-3">
       <div class="flex justify-content-start flex-wrap">
         <custom-button
-          :label="'បង្កើតថ្មី'"
+          :label="'Add'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickCreate', $event)"
         />
         <custom-button
-          :label="'កែប្រែ'"
+          :label="'Edit'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickEdit', $event)"
           :outlined="true"
           :disabled="disabledDetails"
         />
         <custom-button
-          :label="'លុបចោល'"
+          :label="'Delete'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickDelete', selection)"
           :danger="true"
@@ -23,7 +23,7 @@
           :disabled="disabledDelete"
         />
         <custom-button
-          :label="'មើលបន្ថែមទៀត'"
+          :label="'More'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickDetails', selection)"
           :warning="true"
@@ -33,7 +33,7 @@
       </div>
       <custom-input-text
         v-model="filters['global'].value"
-        placeholder="ស្វែងរក ..."
+        placeholder="Search ..."
         :show_icon="true"
         :left_icon="true"
         :search_icon="true"
@@ -59,7 +59,7 @@
         :rows="9"
         :rowsPerPageOptions="[9, 50, 100]"
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
-        currentPageReportTemplate="ការបង្ហាញពី {first} ទៅ {last} នៃចំនួនសរុប {totalRecords}"
+        currentPageReportTemplate="Showing from {first} to {last} of {totalRecords}"
         :globalFilterFields="globalFilterFields"
         v-model:selection="selection"
         v-model:filters="filters"
@@ -67,7 +67,7 @@
       
         <template #empty>
         <div v-if="table_data.length !==0">
-          ពាក្យ <span class="text-danger fw-bolder"> {{ filters["global"].value }}</span> រកមិនឃើញនោះទេ! 🥺
+          The <span class="text-danger fw-bolder"> {{ filters["global"].value }}</span> is not found! 🥺
         </div>
           </template
         >

@@ -1,17 +1,17 @@
 export default (axios)=>({
-    listStudents(){
-        return axios.get(`/students`)
+    listStudents(schoolId){
+        return axios.get(`schools/${schoolId}/students`)
     },
-    createStudent(data){
-        return axios.post(`/students`, data)
+    createStudent(schoolId, data){
+        return axios.post(`schools/${schoolId}/students`, data)
     },
-    updateStudent(data, ID){
-        return axios.put(`/students/${ID}`, data)
+    updateStudent(schoolId, data, ID){
+        return axios.put(`schools/${schoolId}/students/${ID}`, data)
     },
-    getStudent(ID){
-        return axios.get(`/students/${ID}`)
+    getStudent(schoolId, ID){
+        return axios.get(`schools/${schoolId}/students/${ID}`)
     },
-    deleteStudent(ID){
-        return axios.delete(`/students/${ID}`)
+    deleteStudent(schoolId, ID){
+        return axios.delete(`schools/${schoolId}/students/${ID}`)
     }
 })

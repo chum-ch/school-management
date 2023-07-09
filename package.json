@@ -23,7 +23,8 @@
     "primevue": "^3.24.0",
     "vee-validate": "^4.9.6",
     "vue": "^3.2.13",
-    "vue-router": "^4.0.3"
+    "vue-router": "^4.0.3",
+    "vuetify": "^3.3.7"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

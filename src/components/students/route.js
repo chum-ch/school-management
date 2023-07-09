@@ -3,12 +3,12 @@ import StudentsDetails from "./StudentDetails.vue";
 
 const routes = [
   {
-    path: "/students",
+    path: "/schools/:schoolId/students",
     name: "students",
     component: StudentsList,
   },
   {
-    path: "/students/:id",
+    path: "/schools/:schoolId/students/:studentId",
     name: "students-details",
     component: StudentsDetails,
   },
