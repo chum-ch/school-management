@@ -18,23 +18,25 @@
             :message_error="message.Title"
             class="col-12 py-0"
           />
-          <custom-dropdown
-            :options="trainerOptions"
-            :placeholder="'Select trainer'"
-            :label="'Trainer'"
-            :required="true"
-            v-model="scheduleForm.Trainer"
-            :message_error="message.Trainer"
-            class="col-6 py-0"
-            @addNewDropdown="onClickCreateTrainer"
-          />
           <custom-calendar
             :isShowIcon="true"
             :label="'Date'"
             :required="true"
             v-model="scheduleForm.StartDate"
+            :modelValue="scheduleForm.StartDate"
             :message_error="message.StartDate"
-            class="col-6 py-0"
+            class="col-12 py-0"
+          />
+          <custom-dropdown
+            :options="classesOptions"
+            :placeholder="'Select classes'"
+            :label="'Classes'"
+            class="col-12 py-0"
+            v-model="selectClass"
+            :modelValue="selectClass"
+            :required="true"
+            :message_error="message.Class"
+            @addNewDropdown="onClickCreateClass"
           />
           <custom-input-mask
             :placeholder="'hh:mm'"
@@ -42,6 +44,7 @@
             :label="'Start time'"
             :required="true"
             v-model="scheduleForm.StartTime"
+            :modelValue="scheduleForm.StartTime"
             :message_error="message.StartTime"
             class="col-6 py-0"
           />
@@ -51,42 +54,24 @@
             class="col-6 py-0"
             :label="'End time'"
             v-model="scheduleForm.EndTime"
+            :modelValue="scheduleForm.EndTime"
             :required="true"
             :message_error="message.EndTime"
-          />
-          <custom-dropdown
-            :options="roomOptions"
-            :placeholder="'Select room'"
-            :label="'Room'"
-            class="col-6 py-0"
-            v-model="scheduleForm.Room"
-            :required="true"
-            :message_error="message.Room"
-          />
-          <custom-dropdown
-            :options="classOptions"
-            :placeholder="'Select class'"
-            :label="'Classes'"
-            class="col-6 py-0"
-            v-model="scheduleForm.Class"
-            :required="true"
-            :message_error="message.Class"
           />
         </div>
       </template>
     </custom-dialog>
     <!-- Component  -->
-    <!-- Chil trainer form  -->
-    <TrainerForm ref="toTrainerForm" @updatedTrainer="listTrainers" />
+    <!-- Child classes  -->
+    <ClassForm ref="refToChildClassForm" @updatedClass="updatedClass" />
   </div>
 </template>
-
 <script>
-import TrainerForm from "../trainers/TrainerForm.vue";
+import ClassForm from "../classes/ClassForm.vue";
 export default {
   name: "ScheduleForm",
   components: {
-    TrainerForm,
+    ClassForm,
   },
   data() {
     return {
@@ -100,9 +85,6 @@ export default {
         hour12: false,
         timeZone: "Asia/Phnom_Penh",
       },
-      classOptions: [],
-      roomOptions: [],
-      trainerOptions: [],
       schoolId: this.$route.params.schoolId,
       scheduleID: "",
       startTime: "",
@@ -114,8 +96,6 @@ export default {
         EndTime: "",
         StartDate: "",
         EndDate: "",
-        Trainer: "",
-        Room: "",
         Class: "",
       },
       // Error message
@@ -124,10 +104,11 @@ export default {
         StartDate: "",
         StartTime: "",
         EndTime: "",
-        Trainer: "",
-        Room: "",
         Class: "",
       },
+      // Class option
+      selectClass: "",
+      classesOptions: [],
       // Dialog
       footer_label: "",
     };
@@ -137,44 +118,36 @@ export default {
   },
   emits: ["updatedSchedule"],
   watch: {},
-  created() {
-    this.listRooms();
-  },
+  created() {},
   methods: {
-    onClickCreateTrainer() {
-      this.$refs.toTrainerForm.trainerInfoForm();
-    },
     openDialogScheduleForm() {
       this.$refs.dialogScheduleForm.openDialog();
-      this.listTrainers();
-      
+      this.listClasses();
     },
     closeDialogScheduleForm() {
-      this.clearScheduleInfoForm();
-      this.footer_label = "";
       this.$refs.dialogScheduleForm.closeDialog();
-      this.$emit("updatedSchedule", { CloseDialog: true });
+      this.setDefaultValue();
     },
-    // Call schedule form info from parent
-    scheduleInfoForm(data = "") {
-      try {
-        console.log("data", data);
-        if (!data) {
-          this.clearScheduleInfoForm();
-        } else {
-          this.footer_label = "Eidt";
-          this.scheduleForm.Title = data.Title;
-          this.scheduleForm.StartDate = data.StartDate;
-          this.scheduleForm.StartTime = data.StartTime;
-          this.scheduleForm.EndTime = data.EndTime;
-          this.scheduleForm.Room = data.Room;
-          this.scheduleForm.Trainer = data.Trainer;
-          // Get schedule ID
-          this.scheduleID = data.SCHEDULES_ID;
+    onlyUpdateSchedule(data = {}) {
+      if (Object.keys(data).length > 0) {
+        this.scheduleForm.Title = data.Title;
+        this.scheduleForm.StartDate = data.StartDate;
+        this.scheduleForm.StartTime = data.StartTime;
+        this.scheduleForm.EndTime = data.EndTime;
+
+        this.scheduleID = data.SCHEDULES_ID;
+        if (this.scheduleID) {
+          this.footer_label = "Edit";
         }
-        this.openDialogScheduleForm();
-      } catch (error) {
-        console.log("Error schedule info form", error);
+        // Class option
+        if (data.Class && Object.keys(data.Class).length > 0) {
+          this.selectClass = {
+            Value: data.Class.Name,
+            ID: data.Class.Id,
+            Room: data.Class.Room,
+            Trainer: data.Class.Trainer,
+          };
+        }
       }
     },
     getDateTimeFormat(dateToConvert, time) {
@@ -198,9 +171,8 @@ export default {
           this.scheduleForm.StartDate &&
           this.scheduleForm.StartTime &&
           this.scheduleForm.EndTime &&
-          this.scheduleForm.Trainer &&
-          this.scheduleForm.Room &&
-          this.scheduleForm.Class
+          this.selectClass &&
+          this.selectClass.Value
         ) {
           this.scheduleForm.StartDate = this.getDateTimeFormat(
             this.scheduleForm.StartDate,
@@ -210,16 +182,25 @@ export default {
             this.scheduleForm.StartDate,
             this.scheduleForm.EndTime
           );
-          if (!this.footer_label) {
-            await this.$api.schedule.createSchedule(this.schoolId, this.scheduleForm);
-          } else {
-            await this.$api.schedule.updateSchedule(
+          this.selectClass["Name"] = this.selectClass["Value"];
+          this.selectClass["Id"] = this.selectClass["ID"];
+          delete this.selectClass["Value"];
+          delete this.selectClass["ID"];
+          this.scheduleForm.Class = this.selectClass;
+          let schedule = {};
+          if (this.scheduleID) {
+            schedule = await this.$api.schedule.updateSchedule(
               this.schoolId,
               this.scheduleForm,
               this.scheduleID
             );
+          } else {
+            schedule = await this.$api.schedule.createSchedule(
+              this.schoolId,
+              this.scheduleForm
+            );
           }
-          this.$emit("updatedSchedule");
+          this.$emit("updatedSchedule", schedule.data);
           this.closeDialogScheduleForm();
         } else {
           if (!this.scheduleForm.Title) {
@@ -231,16 +212,6 @@ export default {
             this.message.StartDate = "Date  is required";
           } else {
             this.message.StartDate = "";
-          }
-          if (!this.scheduleForm.Trainer) {
-            this.message.Trainer = "Trainer is required";
-          } else {
-            this.message.Trainer = "";
-          }
-          if (!this.scheduleForm.Room) {
-            this.message.Room = "Room is required";
-          } else {
-            this.message.Room = "";
           }
           if (!this.scheduleForm.Class) {
             this.message.Class = "Class is required";
@@ -262,52 +233,51 @@ export default {
         console.log("Error create schedule info", error);
       }
     },
+    /**
+     *
+     * Classes
+     */
+    onClickCreateClass(value) {
+      this.$refs.refToChildClassForm.openDialogClassForm();
+      this.$refs.refToChildClassForm.onlyUpdateClasses({ Name: value });
+    },
+    updatedClass(classData) {
+      if (classData && Object.keys(classData).length > 0) {
+        this.selectClass = {
+          Value: classData.Name,
+          ID: classData.CLASSES_ID,
+          Room: classData.Room,
+          Trainer: classData.Trainer,
+        };
+      }
+      this.listClasses();
+    },
     async listClasses() {
       try {
-        let classes = await this.$api.class.listClasses(this.schoolId);
+        let classes = await this.$api.classApi.listClasses(this.schoolId);
         if (classes && classes.data && classes.data.length > 0) {
-          this.classOptions = classes.data.map((classItem) => {
+          this.classesOptions = classes.data.map((item) => {
             return {
-              Value: `${classItem.Name}`,
-              ID: classItem.CLASSES_ID,
+              Value: item.Name,
+              ID: item.CLASSES_ID,
+              Room: item.Room,
+              Trainer: item.Trainer,
             };
           });
-        } else {
-          this.classOptions = [];
         }
-        this.listRooms();
       } catch (error) {
         console.log("Error list class", error);
       }
     },
-    async listTrainers() {
-      let trainers = await this.$api.trainer.listTrainers(this.schoolId);
-      if (trainers && trainers.data.length > 0) {
-        this.trainerOptions = trainers.data.map((trainer) => {
-          return {
-            Value: `${trainer.LastName} ${trainer.FirstName}`,
-            ID: trainer.TRAINERS_ID,
-          };
-        });
-      } else {
-        this.trainerOptions = [];
-      }
-    this.listClasses();
-    },
-    async listRooms() {
-      let rooms = await this.$api.room.listRooms(this.schoolId);
-      if (rooms && rooms.data.length > 0) {
-        this.roomOptions = rooms.data.map((room) => {
-          return { Value: `${room.Name}`, ID: room.ROOMS_ID };
-        });
-      } else {
-        this.roomOptions = [];
-      }
-    },
-
-    clearScheduleInfoForm() {
+    /**
+     * Clear value variable
+     */
+    setDefaultValue() {
       this.scheduleForm = {};
       this.message = {};
+      this.scheduleID = "";
+      this.selectClass = "";
+      this.footer_label = "";
     },
   },
 };

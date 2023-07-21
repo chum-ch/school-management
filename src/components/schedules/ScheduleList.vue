@@ -5,7 +5,7 @@
     <div v-show="true">
       <!-- Table  -->
       <custom-table
-        ref="toCallMethodUnSelectedRow"
+        ref="refToChildCustomTable"
         :table_data="tableDataSchedules"
         :columns="columnsSchedules"
         @selected-row-data="selectedRowData"
@@ -16,7 +16,7 @@
       />
       <!-- Dialog delete room  -->
       <custom-dialog
-        ref="dialogDeleteSchedule"
+        ref="refToChildCustomDialogDeleteSchedule"
         @onClickDialogSubmit="deleteSchedule()"
         :danger="true"
         @onClickCloseDialog="closeDialogDeleteSchedule()"
@@ -30,12 +30,10 @@
           </div>
         </template>
       </custom-dialog>
-      
-      
     </div>
     <!-- Component  -->
     <!-- Chil schedule form  -->
-    <ScheduleForm ref="toScheduleForm" @updatedSchedule="updatedSchedule" />
+    <ScheduleForm ref="refToChildScheduleForm" @updatedSchedule="updatedSchedule" />
   </div>
 </template>
 <script>
@@ -73,11 +71,11 @@ export default {
           header: "End time",
         },
         {
-          field: "Trainer.Name",
-          header: "Trainer",
+          field: "Class.Name",
+          header: "Class",
         },
         {
-          field: "Room.Name",
+          field: "Class.Room.Name",
           header: "Room",
         },
       ],
@@ -94,16 +92,17 @@ export default {
   },
   methods: {
     onClickCreateSchedule() {
-      this.$refs.toScheduleForm.scheduleInfoForm();
+      this.$refs.refToChildScheduleForm.openDialogScheduleForm();
     },
     onClickEditSchedule() {
-      this.$refs.toScheduleForm.scheduleInfoForm(this.selectedSchedules[0]);
+      this.$refs.refToChildScheduleForm.openDialogScheduleForm();
+      this.$refs.refToChildScheduleForm.onlyUpdateSchedule(this.selectedSchedules[0]);
     },
     onClickDetailsSchedule(event) {
       this.$router.push(`/cleaners/${event[0].cleanersID}`);
     },
     unSelecteRowSchedule() {
-      this.$refs.toCallMethodUnSelectedRow.unSelectedAllRows();
+      this.$refs.refToChildCustomTable.unSelectedAllRows();
     },
     // Delete schedule
     onClickDeleteSchedule() {
@@ -121,7 +120,7 @@ export default {
           { label: "Manages", to: `/schools/${schoolId}/manages` },
           { label: "Schedules", to: `/schools/${schoolId}/schedules` }
         );
-        this.getListSchedules();
+        this.listSchedules();
       } 
     },
     updatedSchedule(event) {
@@ -132,11 +131,10 @@ export default {
       }
     },
 
-    async getListSchedules() {
+    async listSchedules() {
       try {
         let schedules = await this.$api.schedule.listSchedules(this.schoolId);
         if (schedules && schedules.data.length > 0) {
-          console.log('this.tabl', this.tableDataSchedules)
           this.tableDataSchedules = schedules.data.map((schedule) => {
             let splitDate = schedule.StartDate.split("T");
             schedule.StartDate = splitDate[0];
@@ -155,13 +153,13 @@ export default {
         await this.$api.schedule.deleteSchedule(this.schoolId, item.SCHEDULES_ID);
       }
       this.closeDialogDeleteSchedule();
-      this.getListSchedules();
+      this.listSchedules();
     },
     openDialogDeleteSchedule() {
-      this.$refs.dialogDeleteSchedule.openDialog();
+      this.$refs.refToChildCustomDialogDeleteSchedule.openDialog();
     },
     closeDialogDeleteSchedule() {
-      this.$refs.dialogDeleteSchedule.closeDialog();
+      this.$refs.refToChildCustomDialogDeleteSchedule.closeDialog();
       this.unSelecteRowSchedule();
     },
   },

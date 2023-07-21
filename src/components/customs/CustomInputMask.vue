@@ -10,6 +10,7 @@
         v-model="values"
         :mask="mask"
         :placeholder="placeholder"
+        @update:modelValue="updateModelValue"
       />
       <small v-if="message_errors !== ''" class="flex text-red-500">
         {{ message_errors }}
@@ -77,8 +78,15 @@ export default {
     },
   },
   created() {
+    this.updateModelValue(this.modelValue)
   },
-  methods: {},
+  methods: {
+    updateModelValue(value) {
+      this.values = value;
+      this.$emit("update:modelValue", this.values);
+      // console.log("value text input", value);
+    },
+  },
 };
 </script>
 

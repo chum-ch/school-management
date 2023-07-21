@@ -15,13 +15,13 @@
           v-model="roomForm.Name"
           :required="true"
           :message_error="message.Name"
-          class=""
+          class="py-0"
         />
         <custom-input-text
           :placeholder="'.......'"
           :label="'Floor'"
           v-model="roomForm.Floor"
-          class=""
+          class="py-0"
         />
       </template>
     </custom-dialog>

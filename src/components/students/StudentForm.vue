@@ -36,7 +36,7 @@
             :options="classesOptions"
             :placeholder="'Select classes'"
             :label="'Classes'"
-            class="col-6"
+            class="col-6 py-0"
             v-model="selectClass"
             :modelValue="selectClass"
             :required="true"
@@ -54,7 +54,7 @@
             :label="'Gender'"
             :defaultValue="'Male'"
             :isFlex="true"
-            class="col-12"
+            class="col-12 py-0"
             :categories="radioButtonOptionStudent"
           />
         </div>
@@ -191,6 +191,14 @@ export default {
         console.log("Error create student info", error);
       }
     },
+    /**
+     *
+     * Classes
+     */
+    onClickCreateClass(value) {
+      this.$refs.refToChildClassForm.openDialogClassForm();
+      this.$refs.refToChildClassForm.onlyUpdateClasses({ Name: value });
+    },
     updatedClass(classData) {
       if (classData && Object.keys(classData).length > 0 && !classData.CloseDialog) {
         this.selectClass = {
@@ -219,10 +227,9 @@ export default {
         console.log("Error list class", error);
       }
     },
-    onClickCreateClass(value) {
-      this.$refs.refToChildClassForm.openDialogClassForm();
-      this.$refs.refToChildClassForm.onlyUpdateClasses({ Name: value });
-    },
+    /**
+     * Clear value variable
+     */
     setDefaultValue() {
       this.studentForm = {};
       this.message = {};

@@ -16,7 +16,7 @@
             :required="true"
             v-model="trainerForm.LastName"
             :message_error="message.LastName"
-            class="col-6"
+            class="col-6 py-0"
           />
           <custom-input-text
             :placeholder="'......'"
@@ -24,34 +24,34 @@
             :required="true"
             v-model="trainerForm.FirstName"
             :message_error="message.FirstName"
-            class="col-6"
+            class="col-6 py-0"
           />
           <custom-input-text
             :placeholder="'......'"
             :label="'Province'"
             v-model="trainerForm.Province"
             :message_error="message.Province"
-            class="col-6"
+            class="col-6 py-0"
           />
           <custom-input-text
             :placeholder="'......'"
             :label="'Phone'"
             v-model="trainerForm.Phone"
             :message_error="message.Phone"
-            class="col-6"
+            class="col-6 py-0"
           />
           <custom-input-text
             :placeholder="'......'"
             :label="'Email'"
             v-model="trainerForm.Email"
-            class="col-12"
+            class="col-12 py-0"
           />
           <custom-radio-button
             v-model="gender"
             :label="'Gender'"
             :defaultValue="'Male'"
             :isFlex="true"
-            class="col-12"
+            class="col-12 py-0"
             :categories="radioButtonOptionTriner"
           />
         </div>

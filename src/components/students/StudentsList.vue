@@ -123,7 +123,6 @@ export default {
         } else {
           this.tableDataStudents = [];
         }
-        console.log('student data', students.data);
         this.unSelecteRowStudent();
       } catch (error) {
         console.log("Error list student", error);

@@ -15,13 +15,13 @@
           :required="true"
           v-model="classForm.Name"
           :message_error="message.Name"
-          class=""
+          class="col-12 py-0"
         />
         <custom-dropdown
           :options="roomOptions"
           :placeholder="'Select room'"
           :label="'Room'"
-          class="col-6"
+          class="py-0"
           v-model="selectRoom"
           :modelValue="selectRoom"
           :required="true"
@@ -34,7 +34,7 @@
           :label="'Trainer'"
           v-model="selectTrainer"
           :modelValue="selectTrainer"
-          class="col-6"
+          class="py-0"
           @addNewDropdown="onClickCreateTrainer"
         />
       </template>
@@ -66,7 +66,6 @@ export default {
       selectRoom: "",
       roomOptions: [],
       // Trainer
-      modelValueUpdateTrainer: {},
       trainerOptions: [],
       selectTrainer: "",
       // Error message
@@ -80,7 +79,6 @@ export default {
   },
   props: {
     msg: String,
-    modelDataObjectUpdateClass: [Object],
   },
   emits: ["updatedClass"],
   updated() {},
@@ -92,14 +90,6 @@ export default {
       this.$refs.refToChildCustomDialog.openDialog();
       this.listRooms();
       this.listTrainers();
-    },
-    onClickCreateTrainer(value) {
-      this.$refs.refToChildTrainerForm.openDialogTrainerForm();
-      this.$refs.refToChildTrainerForm.onlyUpdateTrainer({ FirstName: value });
-    },
-    onClickCreateRoom(value) {
-      this.$refs.refToChildRoomForm.openDialogRoomForm();
-      this.$refs.refToChildRoomForm.onlyUpdateRoom({ Name: value });
     },
     closeDialogClassForm() {
       this.$refs.refToChildCustomDialog.closeDialog();
@@ -170,6 +160,14 @@ export default {
         console.log("Error create class info", error);
       }
     },
+    /**
+     *
+     * Trainer
+     */
+    onClickCreateTrainer(value) {
+      this.$refs.refToChildTrainerForm.openDialogTrainerForm();
+      this.$refs.refToChildTrainerForm.onlyUpdateTrainer({ FirstName: value });
+    },
     async listTrainers() {
       let trainers = await this.$api.trainer.listTrainers(this.schoolId);
       if (trainers && trainers.data.length > 0) {
@@ -179,7 +177,6 @@ export default {
             ID: trainer.TRAINERS_ID,
           };
         });
-        // this.$refs.trainerDropdown.getDropDownOption(this.trainerOptions);
       }
     },
     updatedTrainer(trainer) {
@@ -191,7 +188,14 @@ export default {
       }
       this.listTrainers();
     },
-
+    /**
+     *
+     * Room
+     */
+    onClickCreateRoom(value) {
+      this.$refs.refToChildRoomForm.openDialogRoomForm();
+      this.$refs.refToChildRoomForm.onlyUpdateRoom({ Name: value });
+    },
     updatedRoom(room) {
       if (room && Object.keys(room).length > 0 && !room.CloseDialog) {
         this.selectRoom = { Value: room.Name, ID: room.ROOMS_ID };
@@ -210,6 +214,9 @@ export default {
         console.log("Form class list room error", error);
       }
     },
+    /**
+     * Clear value variable
+     */
     setDefaultValue() {
       this.classForm = {};
       this.message = {};

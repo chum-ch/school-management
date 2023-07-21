@@ -11,6 +11,7 @@
         dateFormat="yy-mm-dd"
         :selectionMode="isMultipleDate ? 'multiple' : isRangeDate ? 'range' : 'single'"
         id="date"
+        @update:modelValue="updateModelValue"
       />
       <small v-if="message_error !== ''" class="flex text-red-500">
         {{ message_error }}
@@ -58,8 +59,16 @@ export default {
       },
     },
   },
-  created() {},
-  methods: {},
+  created() {
+    this.updateModelValue(this.modelValue)
+  },
+  methods: {
+    updateModelValue(value) {
+      this.values = value;
+      this.$emit("update:modelValue", this.values);
+      // console.log("value text input", value);
+    },
+  },
 };
 </script>
 

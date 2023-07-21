@@ -4,7 +4,7 @@
       :header="modal_header ? modal_header : 'Modal'"
       v-model:visible="displayModal"
       :position_dialog="position"
-      :style="{ width: dialog_width ? dialog_width : '80vw' }"
+      :style="{ width: dialog_width ? dialog_width : '45vw' }"
       :modal="true"
       :breakpoints="{ '960px': '75vw', '641px': '100vw' }"
     >
