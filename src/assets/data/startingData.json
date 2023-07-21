@@ -19,13 +19,13 @@
   },
   {
     "name": "schedules",
-    "img": "",
+    "img": "https://cdn-icons-png.flaticon.com/512/4206/4206324.png",
     "title": "Schedules",
     "description": "Manage all schedules in school"
   },
   {
     "name": "classes",
-    "img": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQfoNJIa0Hw8OI0chJ3TndaqeR7nvOpjhU_kOkYGESXsSnuNp_E",
+    "img": "https://icon-library.com/images/class-icon/class-icon-9.jpg",
     "title": "Classes",
     "description": "Manage all classes in school"
   }
