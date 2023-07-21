@@ -45,6 +45,10 @@ import CustomDialog from './components/customs/CustomDialog.vue';
 import CustomViewInfo from './components/customs/CustomViewInfo.vue';
 import CustomDetails from './components/customs/CustomDetails.vue';
 import CustomFullCalendar from './components/customs/CustomFullCalendar.vue';
+import CustomCalendar from './components/customs/CustomCalendar.vue';
+import CustomInputMask from './components/customs/CustomInputMask.vue';
+import CustomDropdown from './components/customs/CustomDropdown.vue';
+import CustomRadioButton from './components/customs/CustomRadioButton.vue';
 const app = createApp(App);
 // Config Axios 
 // const axiosInstance = axios.create({
@@ -83,6 +87,10 @@ app.component('custom-dialog', CustomDialog);
 app.component('custom-view-info', CustomViewInfo);
 app.component('custom-details', CustomDetails);
 app.component('custom-full-calendar', CustomFullCalendar);
+app.component('custom-calendar', CustomCalendar);
+app.component('custom-input-mask', CustomInputMask);
+app.component('custom-dropdown', CustomDropdown);
+app.component('custom-radio-button', CustomRadioButton);
 
 const vuetify = createVuetify({
   components,

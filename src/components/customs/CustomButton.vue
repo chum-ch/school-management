@@ -1,6 +1,5 @@
 <template>
   <div class="p-fluid">
-    <h1>{{ msg }}</h1>
     <div class="my-1 text-white">
       <Button
         @click="($event) => $emit('onClick', $event)"

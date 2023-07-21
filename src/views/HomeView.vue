@@ -34,7 +34,7 @@
       >
         <div class="card h-100 custom transition-duration-500 text-center">
           <div class="image d-flex justify-content-center cursor-pointer flex-wrap my-4">
-            <img :src="item.img" alt="" srcset="" width="150" height="120" class="" />
+            <img :src="item.img" alt="" srcset="" width="140" height="140" class="" />
             <div class="card-body">
               <h5 class="card-title w-100">{{ item.title }}</h5>
               <p class="card-text">
@@ -95,7 +95,7 @@ export default {
       let school = await this.$api.school.getSchool(schoolId)
       if(school && school.data && Object.keys(school.data).length > 0){
         this.breadCrumb = [];
-        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Magnages', to: `/schools/${schoolId}/manages` })
+        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Manages', to: `/schools/${schoolId}/manages` })
       }
     },
     list(screen) {

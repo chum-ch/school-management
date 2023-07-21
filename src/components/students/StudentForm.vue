@@ -1,9 +1,8 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <!-- Dialog student form  -->
     <custom-dialog
-      ref="dialogStudentForm"
+      ref="refToChildCustomDialog"
       :modal_header="'Student Form'"
       @onClickDialogSubmit="createStudentInfo"
       @onClickCloseDialog="closeDialogStudentForm"
@@ -17,7 +16,7 @@
             :required="true"
             v-model="studentForm.LastName"
             :message_error="message.LastName"
-            class="col-6"
+            class="col-6 py-0"
           />
           <custom-input-text
             :placeholder="'.......'"
@@ -25,48 +24,68 @@
             :required="true"
             v-model="studentForm.FirstName"
             :message_error="message.FirstName"
-            class="col-6"
+            class="col-6 py-0"
           />
           <custom-input-text
             :placeholder="'.......'"
-            :label="'Gender'"
-            :required="true"
-            v-model="studentForm.Gender"
-            :message_error="message.Gender"
-            class="col-12"
-          />
-          <custom-input-text
-            :placeholder="'លេខសម្គាល់'"
-            :label="'បញ្ចូល លេខសម្គាល់'"
+            :label="'Student ID'"
             v-model="studentForm.ID"
-            class="col-6"
+            class="col-6 py-0"
           />
-          <custom-input-text
-            :placeholder="'.......'"
-            :label="'Class'"
-            v-model="studentForm.Class"
+          <custom-dropdown
+            :options="classesOptions"
+            :placeholder="'Select classes'"
+            :label="'Classes'"
             class="col-6"
+            v-model="selectClass"
+            :modelValue="selectClass"
+            :required="true"
+            :message_error="message.Class"
+            @addNewDropdown="onClickCreateClass"
           />
           <custom-input-text
             :placeholder="'.......'"
             :label="'Email'"
             v-model="studentForm.Email"
+            class="col-12 py-0"
+          />
+          <custom-radio-button
+            v-model="gender"
+            :label="'Gender'"
+            :defaultValue="'Male'"
+            :isFlex="true"
             class="col-12"
+            :categories="radioButtonOptionStudent"
           />
         </div>
       </template>
     </custom-dialog>
+    <!-- Child classes  -->
+    <ClassForm ref="refToChildClassForm" @updatedClass="updatedClass" />
   </div>
 </template>
 
 <script>
+import ClassForm from "../classes/ClassForm.vue";
 export default {
-  components: {},
+  components: {
+    ClassForm,
+  },
   data() {
     return {
       schoolId: this.$route.params.schoolId,
       studentID: "",
       // Form student
+      gender: "",
+      radioButtonOptionStudent: [
+        {
+          Value: "Male",
+        },
+        {
+          Value: "Female",
+          Disable: false,
+        },
+      ],
       studentForm: {
         ID: "",
         FirstName: "",
@@ -77,11 +96,13 @@ export default {
       },
       // Error message
       message: {
-        ID: "",
         FirstName: "",
         LastName: "",
-        Gender: "",
+        Class: "",
       },
+      // Class
+      selectClass: "",
+      classesOptions: [],
       // Dialog
       footer_label: "",
     };
@@ -91,54 +112,63 @@ export default {
   },
   emits: ["updatedStudent"],
   watch: {},
+  updated() {},
   created() {},
   methods: {
     openDialogStudentForm() {
-      this.$refs.dialogStudentForm.openDialog();
+      this.$refs.refToChildCustomDialog.openDialog();
+      this.listClasses();
     },
     closeDialogStudentForm() {
-      this.clearStudentInfoForm();
-      this.footer_label = "";
-      this.$refs.dialogStudentForm.closeDialog();
-      this.$emit("updatedStudent", { CloseDialog: true });
+      this.$refs.refToChildCustomDialog.closeDialog();
+      this.setDefaultValue();
     },
-    // Call student form info from parent
-    studentInfoForm(data = "") {
-      try {
-        if (!data) {
-          this.clearStudentInfoForm();
-        } else {
+    onlyUpdateStudent(data = {}) {
+      if (Object.keys(data).length > 0) {
+        this.studentForm.FirstName = data.FirstName;
+        this.studentForm.LastName = data.LastName;
+        this.studentForm.Email = data.Email;
+        this.gender = data.Gender;
+        this.studentForm.ID = data.ID;
+        // Get studentID
+        this.studentID = data.STUDENTS_ID;
+        if (this.studentID) {
           this.footer_label = "Edit";
-          this.studentForm.FirstName = data.FirstName;
-          this.studentForm.LastName = data.LastName;
-          this.studentForm.Email = data.Email;
-          this.studentForm.Gender = data.Gender;
-          this.studentForm.Class = data.Class;
-          this.studentForm.ID = data.ID;
-          // Get studentID
-          this.studentID = data.STUDENTS_ID;
         }
-        this.openDialogStudentForm();
-        
-      } catch (error) {
-        console.log("Error student info form", error);
+        // Class option
+        if (data.Class && Object.keys(data.Class).length > 0) {
+          this.selectClass = {
+            Value: data.Class.Name,
+            ID: data.Class.Id,
+            Room: data.Class.Room,
+            Trainer: data.Class.Trainer,
+          };
+        }
       }
     },
     async createStudentInfo() {
       try {
-        if (
-          this.studentForm.FirstName &&
-          this.studentForm.LastName &&
-          this.studentForm.Gender
-        ) {
-          if (!this.footer_label) {
-            await this.$api.student.createStudent(this.schoolId, this.studentForm);
+        if (this.studentForm.FirstName && this.studentForm.LastName && this.selectClass) {
+          this.selectClass["Name"] = this.selectClass["Value"];
+          this.selectClass["Id"] = this.selectClass["ID"];
+          delete this.selectClass["Value"];
+          delete this.selectClass["ID"];
+          this.studentForm.Gender = this.gender;
+          this.studentForm.Class = this.selectClass;
+          let student = {};
+          if (this.studentID) {
+            student = await this.$api.student.updateStudent(
+              this.schoolId,
+              this.studentForm,
+              this.studentID
+            );
           } else {
-            await this.$api
-              .student
-              .updateStudent(this.schoolId, this.studentForm, this.studentID);
+            student = await this.$api.student.createStudent(
+              this.schoolId,
+              this.studentForm
+            );
           }
-          this.$emit("updatedStudent");
+          this.$emit("updatedStudent", student.data);
           this.closeDialogStudentForm();
         } else {
           if (!this.studentForm.FirstName) {
@@ -151,25 +181,58 @@ export default {
           } else {
             this.message.LastName = "";
           }
-          if (!this.studentForm.Gender) {
-            this.message.Gender = "Gender is required";
+          if (!this.selectClass) {
+            this.message.Class = "Class is required";
           } else {
-            this.message.Gender = "";
+            this.message.Class = "";
           }
         }
-        
       } catch (error) {
         console.log("Error create student info", error);
       }
     },
-    clearStudentInfoForm() {
+    updatedClass(classData) {
+      if (classData && Object.keys(classData).length > 0 && !classData.CloseDialog) {
+        this.selectClass = {
+          Value: classData.Name,
+          ID: classData.CLASSES_ID,
+          Room: classData.Room,
+          Trainer: classData.Trainer,
+        };
+      }
+      this.listClasses();
+    },
+    async listClasses() {
+      try {
+        let classes = await this.$api.classApi.listClasses(this.schoolId);
+        if (classes && classes.data && classes.data.length > 0) {
+          this.classesOptions = classes.data.map((item) => {
+            return {
+              Value: item.Name,
+              ID: item.CLASSES_ID,
+              Room: item.Room,
+              Trainer: item.Trainer,
+            };
+          });
+        }
+      } catch (error) {
+        console.log("Error list class", error);
+      }
+    },
+    onClickCreateClass(value) {
+      this.$refs.refToChildClassForm.openDialogClassForm();
+      this.$refs.refToChildClassForm.onlyUpdateClasses({ Name: value });
+    },
+    setDefaultValue() {
       this.studentForm = {};
       this.message = {};
+      this.studentID = "";
+      this.footer_label = "";
+      this.selectClass = "";
     },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+<style scoped></style>

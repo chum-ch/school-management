@@ -1,9 +1,8 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <!-- Dialog trainer form  -->
     <custom-dialog
-      ref="dialogTrainerForm"
+      ref="refToChildCustomDialog"
       :modal_header="'Trainer Form'"
       @onClickDialogSubmit="createTrainerInfo"
       @onClickCloseDialog="closeDialogTrainerForm"
@@ -29,14 +28,6 @@
           />
           <custom-input-text
             :placeholder="'......'"
-            :label="'Gender'"
-            :required="true"
-            v-model="trainerForm.Gender"
-            :message_error="message.Gender"
-            class="col-6"
-          />
-          <custom-input-text
-            :placeholder="'......'"
             :label="'Province'"
             v-model="trainerForm.Province"
             :message_error="message.Province"
@@ -47,13 +38,21 @@
             :label="'Phone'"
             v-model="trainerForm.Phone"
             :message_error="message.Phone"
-            class="col-12"
+            class="col-6"
           />
           <custom-input-text
             :placeholder="'......'"
             :label="'Email'"
             v-model="trainerForm.Email"
             class="col-12"
+          />
+          <custom-radio-button
+            v-model="gender"
+            :label="'Gender'"
+            :defaultValue="'Male'"
+            :isFlex="true"
+            class="col-12"
+            :categories="radioButtonOptionTriner"
           />
         </div>
       </template>
@@ -72,11 +71,22 @@ export default {
       trainerForm: {
         FirstName: "",
         LastName: "",
-        Gender: "",
         Email: "",
         Province: "",
-        Phone: ""
+        Phone: "",
+        Gender: "",
       },
+      gender: "",
+      radioButtonOptionTriner: [
+        {
+          Value: "Male",
+        },
+        {
+          Value: "Female",
+          Disable: false,
+        },
+      ],
+
       // Error message
       message: {
         FirstName: "",
@@ -89,56 +99,62 @@ export default {
   },
   props: {
     msg: String,
+    modelValueUpdateTrainer: [String, Object],
   },
   emits: ["updatedTrainer"],
   watch: {},
-  created() {},
+  updated() {
+  },
+  created() {
+    this.onlyUpdateTrainer();
+  },
   methods: {
     openDialogTrainerForm() {
-      this.$refs.dialogTrainerForm.openDialog();
+      this.$refs.refToChildCustomDialog.openDialog();
     },
     closeDialogTrainerForm() {
-      this.clearTrainerInfoForm()
-      this.footer_label = "";
-      this.$refs.dialogTrainerForm.closeDialog();
-      this.$emit("updatedTrainer", { CloseDialog: true });
+      this.$refs.refToChildCustomDialog.closeDialog();
+      this.setDefaultValue();
     },
-    // Call trainer form info from parent
-    trainerInfoForm(data = "") {
-      try {
-        if (!data) {
-          this.clearTrainerInfoForm();
-        } else {
+    onlyUpdateTrainer( data = {}) {
+      if (
+        data &&
+        Object.keys(data).length > 0
+      ) {
+        this.trainerForm.FirstName = data.FirstName;
+        this.trainerForm.LastName = data.LastName;
+        this.trainerForm.Email = data.Email;
+        this.gender = data.Gender;
+        this.trainerForm.Province = data.Province;
+        this.trainerForm.Phone = data.Phone;
+        // Get trainer ID
+        this.trainerID = data.TRAINERS_ID;
+        if (this.trainerID) {
           this.footer_label = "Eidt";
-          this.trainerForm.FirstName = data.FirstName;
-          this.trainerForm.LastName = data.LastName;
-          this.trainerForm.Email = data.Email;
-          this.trainerForm.Gender = data.Gender;
-          this.trainerForm.Province = data.Province;
-          this.trainerForm.Phone = data.Phone;
-          // Get trainer ID
-          this.trainerID = data.TRAINERS_ID
-          
         }
-        this.openDialogTrainerForm();
-        
-      } catch (error) {
-        console.log("Error trainer info form", error);
       }
     },
+
     async createTrainerInfo() {
       try {
-        if (
-          this.trainerForm.FirstName &&
-          this.trainerForm.LastName &&
-          this.trainerForm.Gender
-        ) {
-          if (!this.footer_label) {
-            await this.$api.trainer.createTrainer(this.schoolId, this.trainerForm);
+        this.trainerForm.Gender = this.gender;
+        if (this.trainerForm.FirstName && this.trainerForm.LastName) {
+          let trainer = {};
+          if (
+            this.trainerID
+          ) {
+            trainer = await this.$api.trainer.updateTrainer(
+              this.schoolId,
+              this.trainerForm,
+              this.trainerID
+            );
           } else {
-            await this.$api.trainer.updateTrainer(this.schoolId, this.trainerForm, this.trainerID);
+            trainer = await this.$api.trainer.createTrainer(
+              this.schoolId,
+              this.trainerForm
+            );
           }
-          this.$emit("updatedTrainer");
+          this.$emit("updatedTrainer", trainer.data);
           this.closeDialogTrainerForm();
         } else {
           if (!this.trainerForm.FirstName) {
@@ -151,26 +167,20 @@ export default {
           } else {
             this.message.LastName = "";
           }
-          if (!this.trainerForm.Gender) {
-            this.message.Gender = "Gender is required";
-          } else {
-            this.message.Gender = "";
-          }
         }
-        
       } catch (error) {
         console.log("Error create trainer info", error);
       }
     },
-    clearTrainerInfoForm() {
+    setDefaultValue() {
       this.trainerForm = {};
       this.message = {};
-    },
+      this.trainerID = "";
+      this.footer_label = "";
+    }
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
+<style scoped></style>

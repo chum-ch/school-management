@@ -1,12 +1,10 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-
     <Dialog
       :header="modal_header ? modal_header : 'Modal'"
       v-model:visible="displayModal"
       :position_dialog="position"
-      :style="{ width: dialog_width ? dialog_width : '40vw' }"
+      :style="{ width: dialog_width ? dialog_width : '80vw' }"
       :modal="true"
       :breakpoints="{ '960px': '75vw', '641px': '100vw' }"
     >
@@ -52,6 +50,7 @@ export default {
   },
   props: {
     msg: String,
+    showDialog: Boolean,
     modal_header: String,
     dialog_width: String,
     position_dialog: String,
@@ -63,6 +62,10 @@ export default {
   },
   emits: ["onClickDialogSubmit", "onClickCloseDialog"],
   watch: {},
+  updated() {
+    // this.displayModal = this.showDialog
+    // console.log('show dia', this.displayModal);
+  },
   created() {},
   methods: {
     openDialog() {

@@ -39,7 +39,6 @@
         :search_icon="true"
       />
     </div>
-    <h1>{{ msg }}</h1>
     <div class="m-1">
       <!-- showGridlines -->
       <DataTable

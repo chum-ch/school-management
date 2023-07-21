@@ -1,6 +1,5 @@
 <template>
   <div class="p-fluid">
-    <h1>{{ msg }}</h1>
     <label v-if="label !== ''">{{ label }} </label>
     <span v-if="required" class="text-red-500"> *</span>
     <div class="my-1">

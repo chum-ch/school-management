@@ -1,7 +1,5 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
-
     <div>
       <button-primevue label="Check" />
     </div>
@@ -15,6 +13,7 @@ export default {
   data() {
     return {
       values: "",
+      p_invalid: "",
     };
   },
   props: {
@@ -41,6 +40,14 @@ export default {
       immediate: true,
       handler(data) {
         this.$emit("update:modelValue", data);
+      },
+    },
+    message_error: {
+      immediate: true,
+      handler(data) {
+        if (data) {
+          this.p_invalid = "p-invalid";
+        }
       },
     },
   },

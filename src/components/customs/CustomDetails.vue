@@ -1,8 +1,6 @@
 <template>
   <div>
   <div class="hello flex gap-2">
-    <h1>{{ msg }}</h1>
-
     <div class="mt-4">
       <div class="shadow-8 md:shadow-2 surface-overlay p-3 w-25rem">
         <!-- <div class="w-2rem h-2rem bg-warning border-circle text-center text-white float-end">.</div> -->

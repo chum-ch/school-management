@@ -1,6 +1,5 @@
 <template>
   <div>
-    <h1>{{ msg }}</h1>
 
         <TabView>
             <TabPanel :header="nameTab">

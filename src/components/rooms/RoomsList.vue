@@ -1,55 +1,58 @@
 <template>
-    <div>
-         <!-- Navigation with breadCrum  -->
-      <custom-navigation :breadCrumb="breadCrumb" />
-      <div v-show="true">
-        <!-- Table  -->
-        <custom-table
-          ref="toCallMethodUnSelectedRow"
-          :table_data="tableDataRooms"
-          :columns="columnsRoom"
-          @selected-row-data="selectedRowData"
-          @onClickCreate="onClickCreateRoom"
-          @onClickEdit="onClickEditRoom"
-          @onClickDelete="openDialogDeleteRoom"
-          @onClickDetails="onClickDetailsRoom"
-        />
-      </div>
-      <!-- Chil room form  -->
-      <RoomForm ref="toRoomForm" @updatedRoom="updatedRoom"/>
-      <!-- Dialog delete room  -->
-      <custom-dialog
-        ref="dialogDeleteRoom"
-        @onClickDialogSubmit="deleteRoom()"
-        :danger="true"
-        @onClickCloseDialog="closeDialogDeleteRoom()"
-        :is_delete="true"
-        :footer_label="'Delete'"
-        :modal_header="'Delete Room'"
-      >
-        <template #bodyDialog>
-          <div class="text-center mt-4">
-            You was selected  {{ selectedRooms.length }} to delete.
-          </div>
-        </template>
-      </custom-dialog>
+  <div>
+    <!-- Navigation with breadCrum  -->
+    <custom-navigation :breadCrumb="breadCrumb" />
+    <div v-show="true">
+      <!-- Table  -->
+      <custom-table
+        ref="refToChildCustomTable"
+        :table_data="tableDataRooms"
+        :columns="columnsRoom"
+        @selected-row-data="selectedRowData"
+        @onClickCreate="onClickCreateRoom"
+        @onClickEdit="onClickEditRoom"
+        @onClickDelete="openDialogDeleteRoom"
+        @onClickDetails="onClickDetailsRoom"
+      />
     </div>
+    <!-- Chil room form  -->
+    <RoomForm
+      ref="refToChildRoomForm"
+      @updatedRoom="updatedRoom"
+    />
+    <!-- Dialog delete room  -->
+    <custom-dialog
+      ref="refToChildCustomDialogDeleteRoomForm"
+      @onClickDialogSubmit="deleteRoom()"
+      :danger="true"
+      @onClickCloseDialog="closeDialogDeleteRoom()"
+      :is_delete="true"
+      :footer_label="'Delete'"
+      :modal_header="'Delete Room'"
+    >
+      <template #bodyDialog>
+        <div class="text-center mt-4">
+          You was selected {{ selectedRooms.length }} to delete.
+        </div>
+      </template>
+    </custom-dialog>
+  </div>
 </template>
 <script>
-import RoomForm from './RoomForm.vue';
+import RoomForm from "./RoomForm.vue";
 export default {
   components: {
-    RoomForm
+    RoomForm,
   },
   data() {
     return {
       schoolId: this.$route.params.schoolId,
-       // Bread Crumb
-       breadCrumb: [],
-       // Table
+      // Bread Crumb
+      breadCrumb: [],
+      // Table
       selectedRooms: [],
       tableDataRooms: [],
-      columnsRoom:[
+      columnsRoom: [
         {
           field: "Name",
           header: "Room name",
@@ -64,66 +67,67 @@ export default {
   props: {},
   watch: {},
   created() {
-    this.getSchoolDetails(this.schoolId)
+    this.getSchoolDetails(this.schoolId);
   },
   methods: {
     onClickCreateRoom() {
-      this.$refs.toRoomForm.roomInfoForm();
-      
+      this.$refs.refToChildRoomForm.openDialogRoomForm();
     },
     onClickEditRoom() {
-     
-      this.$refs.toRoomForm.roomInfoForm(this.selectedRooms[0]);
+      this.$refs.refToChildRoomForm.openDialogRoomForm();
+      this.$refs.refToChildRoomForm.onlyUpdateRoom(this.selectedRooms[0]);
     },
     onClickDetailsRoom(event) {
-      console.log('Details', event);
+      console.log("Details", event);
       // this.$router.push(`/rooms/${event[0].trainersID}`);
     },
     unSelecteRowRoom() {
-      this.$refs.toCallMethodUnSelectedRow.unSelectedAllRows();
+      this.$refs.refToChildCustomTable.unSelectedAllRows();
     },
-  
+
     selectedRowData(data) {
       this.selectedRooms = data;
     },
     async getSchoolDetails(schoolId) {
-      let school = await this.$api.school.getSchool(schoolId)
-      if(school && school.data && Object.keys(school.data).length > 0){
+      let school = await this.$api.school.getSchool(schoolId);
+      if (school && school.data && Object.keys(school.data).length > 0) {
         this.breadCrumb = [];
-        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Magnages', to: `/schools/${schoolId}/manages` }, { label: 'Rooms', to: `/schools/${schoolId}/rooms` });
-        this.getListRoom()
+        this.breadCrumb.push(
+          { label: `${school.data.Name}`, to: "/" },
+          { label: "Manages", to: `/schools/${schoolId}/manages` },
+          { label: "Rooms", to: `/schools/${schoolId}/rooms` }
+        );
+        this.getListRooms();
       }
     },
-    async getListRoom() {
+    async getListRooms() {
       try {
         let rooms = await this.$api.room.listRooms(this.schoolId);
         if (rooms && rooms.data && rooms.data.length > 0) {
           this.tableDataRooms = rooms.data;
+        } else {
+          this.tableDataRooms = [];
         }
         this.unSelecteRowRoom();
       } catch (error) {
-        console.log('Error list room', error);
+        console.log("Error list room", error);
       }
     },
-    updatedRoom(event){
-      if(event && event.CloseDialog){
-        this.unSelecteRowRoom();
-      } else {
-        this.getSchoolDetails(this.schoolId)
-      }
+    updatedRoom() {
+      this.getSchoolDetails(this.schoolId);
     },
-    async deleteRoom(){
-      for (let item of this.selectedRooms){
+    async deleteRoom() {
+      for (let item of this.selectedRooms) {
         await this.$api.room.deleteRoom(this.schoolId, item.ROOMS_ID);
       }
       this.closeDialogDeleteRoom();
-      this.getSchoolDetails(this.schoolId);
+      this.getListRooms();
     },
     openDialogDeleteRoom() {
-      this.$refs.dialogDeleteRoom.openDialog();
+      this.$refs.refToChildCustomDialogDeleteRoomForm.openDialog();
     },
     closeDialogDeleteRoom() {
-      this.$refs.dialogDeleteRoom.closeDialog();
+      this.$refs.refToChildCustomDialogDeleteRoomForm.closeDialog();
       this.unSelecteRowRoom();
     },
   },
@@ -131,6 +135,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
+<style scoped></style>

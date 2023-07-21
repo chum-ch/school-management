@@ -18,28 +18,28 @@
           "
         />
         <InputText
-          v-model="values"
           :class="required && message_error !== '' ? p_invalid : ''"
           :style="{ border: border }"
           :placeholder="placeholder"
+          v-model="values"
+          @update:modelValue="updateModelValue"
         />
       </span>
     </div>
     <div class="my-1" v-else>
       <InputText
-        v-model="values"
         :style="{ border: border }"
         :class="required && message_error !== '' ? p_invalid : ''"
         :placeholder="placeholder"
         :disabled="is_disabled"
+        v-model="values"
+        @update:modelValue="updateModelValue"
       />
     </div>
     <small v-if="message_error !== ''" class="flex text-red-500">
       {{ message_error }}
-      <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 2px;" />
-      
-      </small
-    >
+      <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 2px" />
+    </small>
   </div>
 </template>
 <script>
@@ -55,8 +55,9 @@ export default {
       p_invalid: "",
     };
   },
+  updated() {},
   created() {
-    this.values = this.modelValue;
+    this.updateModelValue(this.modelValue);
   },
   props: {
     msg: String,
@@ -72,17 +73,17 @@ export default {
     right_icon: Boolean,
     is_disabled: Boolean,
     border: String,
-    value: String,
-    modelValue: [String, Number],
+    // value: String,
+    modelValue: [String, Number, Object],
   },
   emits: ["update:modelValue"],
   watch: {
-    values: {
-      immediate: true,
-      handler(data) {
-        this.$emit("update:modelValue", data);
-      },
-    },
+    // values: {
+    //   immediate: true,
+    //   handler(data) {
+    //     this.$emit("update:modelValue", data);
+    //   },
+    // },
     message_error: {
       immediate: true,
       handler(data) {
@@ -92,7 +93,13 @@ export default {
       },
     },
   },
-  methods: {},
+  methods: {
+    updateModelValue(value) {
+      this.values = value;
+      this.$emit("update:modelValue", this.values);
+      // console.log("value text input", value);
+    },
+  },
 };
 </script>
 

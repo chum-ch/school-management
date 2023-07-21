@@ -2,7 +2,6 @@
   <div>
     <custom-navigation :breadCrumb="breadCrumb" />
     <div class="hello flex">
-      <h1>{{ msg }}</h1>
       <custom-details :full_name="fullName" :email="email">
         <template #view_info>
           <custom-view-info :items_view_info="viewInfo" />

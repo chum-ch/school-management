@@ -5,14 +5,16 @@ import ResetPasswordForm from '../components/authentications/ResetPasswordForm.v
 // Import other router
 import SchoolsRouter from '../components/schools/route';
 import TrainersRouter from '../components/trainers/route';
-import RoomssRouter from '../components/rooms/route';
+import ClassesRouter from '../components/classes/route';
+import RoomsRouter from '../components/rooms/route';
 import StudentsRouter from '../components/students/route';
 import CleanersRouter from '../components/cleaners/route';
 import SchedulesRouter from '../components/schedules/route';
 
 const routes = [
   ...SchoolsRouter,
-  ...RoomssRouter,
+  ...ClassesRouter,
+  ...RoomsRouter,
   ...TrainersRouter,
   ...StudentsRouter,
   ...CleanersRouter,

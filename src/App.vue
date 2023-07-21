@@ -27,20 +27,28 @@ export default {
   },
   created() {
     // Add an Axios interceptor to show/hide the spinner
-    axios.interceptors.request.use((config) => {
-      this.isLoading = true
-      return config;
-    });
-
-    axios.interceptors.response.use(
-      (response) => {
-        this.isLoading = false
-        return response;
-      },
-      (error) => {
-        return Promise.reject(error);
-      }
-    );
+    try {
+      axios.interceptors.request.use((config) => {
+        this.isLoading = true
+        return config;
+      });
+      
+      axios.interceptors.response.use(
+        (response) => {
+          this.isLoading = false
+          return response;
+        },
+        (error) => {
+          console.log('error');
+          this.isLoading = false
+          return Promise.reject(error);
+        }
+      );
+      
+    } catch (error) {
+      console.log('error', error);
+      this.isLoading = false
+    }
   },
   methods: {
    

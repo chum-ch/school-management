@@ -5,7 +5,7 @@
     <div v-show="true">
       <!-- Table  -->
       <custom-table
-        ref="toCallMethodUnSelectedRow"
+        ref="refToChildCustomTable"
         :table_data="tableDataStudents"
         :columns="columnsStudent"
         @selected-row-data="selectedRowData"
@@ -13,14 +13,13 @@
         @onClickEdit="onClickEditStudent"
         @onClickDelete="onClickDeleteStudent"
         @onClickDetails="onClickDetailsStudent"
-        :data_key="dataKey"
       />
       <!-- Child student form  -->
-      <StudentForm ref="toStudentForm" @updatedStudent="updatedStudent" />
+      <StudentForm ref="refToChildStudentForm" @updatedStudent="updatedStudent" />
 
       <!-- Dialog delete student  -->
       <custom-dialog
-        ref="dialogDeleteStudent"
+        ref="refToChildCustomDialogDeleteStudent"
         @onClickDialogSubmit="deleteStudent"
         :danger="true"
         @onClickCloseDialog="closeDialogDeleteStudent"
@@ -46,13 +45,12 @@ export default {
   },
   data() {
     return {
-       // Bread Crumb
-       breadCrumb: [],
+      // Bread Crumb
+      breadCrumb: [],
       // Table
       schoolId: this.$route.params.schoolId,
       selectedStudent: [],
       tableDataStudents: [],
-      dataKey: "ID",
       columnsStudent: [
         {
           field: "ID",
@@ -75,7 +73,7 @@ export default {
           header: "Email",
         },
         {
-          field: "Class",
+          field: "Class.Name",
           header: "Class",
         },
       ],
@@ -89,64 +87,67 @@ export default {
   },
   methods: {
     onClickCreateStudent() {
-      this.$refs.toStudentForm.studentInfoForm();
+      this.$refs.refToChildStudentForm.openDialogStudentForm();
     },
     onClickEditStudent() {
-      this.$refs.toStudentForm.studentInfoForm(this.selectedStudent[0]);
+      this.$refs.refToChildStudentForm.openDialogStudentForm();
+      this.$refs.refToChildStudentForm.onlyUpdateStudent(this.selectedStudent[0]);
     },
     onClickDetailsStudent(event) {
-      console.log('details', event);
+      console.log("details", event);
       // this.$router.push(`/students/${event[0].studentsID}`);
     },
     unSelecteRowStudent() {
-      this.$refs.toCallMethodUnSelectedRow.unSelectedAllRows();
+      this.$refs.refToChildCustomTable.unSelectedAllRows();
     },
     selectedRowData(data) {
       this.selectedStudent = data;
     },
     async getSchoolDetails(schoolId) {
-      let school = await this.$api.school.getSchool(schoolId)
-      if(school && school.data && Object.keys(school.data).length > 0){
+      let school = await this.$api.school.getSchool(schoolId);
+      if (school && school.data && Object.keys(school.data).length > 0) {
         this.breadCrumb = [];
-        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Magnages', to: `/schools/${schoolId}/manages` }, { label: 'Students', to: `/schools/${schoolId}/students` })
-        this.getListStudent()
+        this.breadCrumb.push(
+          { label: `${school.data.Name}`, to: "/" },
+          { label: "Manages", to: `/schools/${schoolId}/manages` },
+          { label: "Students", to: `/schools/${schoolId}/students` }
+        );
+        this.getListStudent();
       }
     },
     async getListStudent() {
       try {
         let students = await this.$api.student.listStudents(this.schoolId);
-        if(students && students.data && students.data.length > 0){
-          this.tableDataStudents = students.data
+        if (students && students.data && students.data.length > 0) {
+          this.tableDataStudents = students.data;
+        } else {
+          this.tableDataStudents = [];
         }
+        console.log('student data', students.data);
         this.unSelecteRowStudent();
-        
       } catch (error) {
         console.log("Error list student", error);
       }
     },
-    updatedStudent(event) {
-      if(event && event.CloseDialog) {
-       this.unSelecteRowStudent()
-      } else {
-        this.getSchoolDetails(this.schoolId);
-      }
+    updatedStudent() {
+      this.getSchoolDetails(this.schoolId);
     },
     // Delete student
     onClickDeleteStudent() {
       this.openDialogDeleteStudent();
     },
     openDialogDeleteStudent() {
-      this.$refs.dialogDeleteStudent.openDialog();
+      this.$refs.refToChildCustomDialogDeleteStudent.openDialog();
     },
     closeDialogDeleteStudent() {
-      this.$refs.dialogDeleteStudent.closeDialog();
+      this.$refs.refToChildCustomDialogDeleteStudent.closeDialog();
     },
     async deleteStudent() {
       for (let item of this.selectedStudent) {
         await this.$api.student.deleteStudent(this.schoolId, item.STUDENTS_ID);
       }
       this.closeDialogDeleteStudent();
-      this.getSchoolDetails(this.schoolId);
+      this.getListStudent();
     },
   },
 };

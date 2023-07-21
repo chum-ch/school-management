@@ -1,6 +1,5 @@
 <template>
   <div class="hello">
-    <h1>{{ msg }}</h1>
     <!-- Dialog room form  -->
     <custom-dialog
       ref="dialogRoomForm"
@@ -13,8 +12,8 @@
         <custom-input-text
           :placeholder="'.......'"
           :label="'Room name'"
-          :required="true"
           v-model="roomForm.Name"
+          :required="true"
           :message_error="message.Name"
           class=""
         />
@@ -55,44 +54,57 @@ export default {
   },
   emits: ["updatedRoom"],
   watch: {},
-  created() {},
+  updated() {
+    // if (this.modelValueUpdateRoom && Object.keys(this.modelValueUpdateRoom).length > 0) {
+    //   this.roomForm.Name = this.modelValueUpdateRoom.Name;
+    //   this.roomForm.Floor = this.modelValueUpdateRoom.Floor;
+    //   // Get roomID
+    //   this.roomID = this.modelValueUpdateRoom.ROOMS_ID;
+    //   if(this.roomID) {
+    //     this.footer_label = "Edit";
+    //   }
+    // } else {
+    //   this.roomForm = {};
+    //   this.message = {};
+    // }
+    // console.log('vfdfd', this.modelValueUpdateRoom);
+  },
+  created() {
+  },
   methods: {
     openDialogRoomForm() {
       this.$refs.dialogRoomForm.openDialog();
     },
     closeDialogRoomForm() {
-      this.clearRoomInfoForm()
       this.footer_label = "";
       this.$refs.dialogRoomForm.closeDialog();
-      this.$emit("updatedRoom", { CloseDialog: true });
+      this.setDefaultValue();
     },
-    // Call room form info from parent
-    roomInfoForm(data = "") {
-      try {
-        if (!data) {
-          this.clearRoomInfoForm();
-        } else {
-          this.footer_label = "Edit";
-          this.roomForm.Name = data.Name;
-          this.roomForm.Floor = data.Floor;
-          // Get roomID
-          this.roomID = data.ROOMS_ID;
-        }
-        this.openDialogRoomForm();
-      } catch (error) {
-        console.log("Error room info form", error);
+    onlyUpdateRoom (data ={}) {
+      if (data && Object.keys(data).length > 0) {
+      this.roomForm.Name = data.Name;
+      this.roomForm.Floor = data.Floor;
+      // Get roomID
+      this.roomID = data.ROOMS_ID;
+      if(this.roomID) {
+        this.footer_label = "Edit";
       }
+    } 
     },
     async createRoomInfo() {
       try {
         if (this.roomForm.Name) {
-          if (!this.footer_label) {
-            await this.$api.room.createRoom(this.schoolId, this.roomForm);
+          let room = {};
+          if (this.roomID) {
+            room = await this.$api.room.updateRoom(
+              this.schoolId,
+              this.roomForm,
+              this.roomID
+            );
           } else {
-            console.log(this.roomForm);
-            await this.$api.room.updateRoom(this.schoolId, this.roomForm, this.roomID);
+            room = await this.$api.room.createRoom(this.schoolId, this.roomForm);
           }
-          this.$emit("updatedRoom");
+          this.$emit("updatedRoom", room.data);
           this.closeDialogRoomForm();
         } else {
           if (!this.roomForm.Name) {
@@ -105,10 +117,12 @@ export default {
         console.log("Error create room info", error);
       }
     },
-    clearRoomInfoForm() {
+    setDefaultValue() {
       this.roomForm = {};
       this.message = {};
-    },
+      this.roomID = "";
+      this.footer_label = "";
+    }
   },
 };
 </script>

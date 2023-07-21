@@ -1,16 +1,10 @@
 import ScheduleList from "./ScheduleList.vue";
-import ScheduleDetails from "./ScheduleDetails.vue";
 
 const routes = [
   {
-    path: "/schedules",
+    path: "/schools/:schoolId/schedules",
     name: "schedules",
     component: ScheduleList,
-  },
-  {
-    path: "/schedules/:id",
-    name: "schedules-details",
-    component: ScheduleDetails,
   },
 ];
 

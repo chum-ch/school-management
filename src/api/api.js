@@ -1,10 +1,12 @@
 
 // // Config default api and accept header
 
-import rooms from "./school-api/rooms";
 import schools from "./school-api/schools";
-import students from "./school-api/students";
+import rooms from "./school-api/rooms";
+import classes from "./school-api/classes";
+import schedules from "./school-api/schedules";
 import trainers from "./school-api/trainers";
+import students from "./school-api/students";
 
 // export default axios.create({
 //     baseURL: process.env.VUE_APP_BACKEND_URL,
@@ -12,13 +14,13 @@ import trainers from "./school-api/trainers";
 //       "Content-type": "application/json"
 //     }
 //   });
-
-
 export default axios => ({
   school: schools(axios),
-  student: students(axios),
-  trainer: trainers(axios),
+  classApi: classes(axios),
   room: rooms(axios),
+  schedule: schedules(axios),
+  trainer: trainers(axios),
+  student: students(axios),
   
 });
 

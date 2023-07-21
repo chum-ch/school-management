@@ -1,102 +1,172 @@
 <template>
-    <div>
-         <!-- Navigation with breadCrum  -->
-      <custom-navigation :breadCrumb="breadCrumb" />
-      <div v-show="true">
-        <!-- Table  -->
-        <custom-table
-          ref="toCallMethodUnSelectedRow"
-          :table_data="tableDataCleaners"
-          :columns="columnsCleaner"
-          @selected-row-data="selectedRowData"
-          @onClickCreate="onClickCreateCleaner"
-          @onClickEdit="onClickEditCleaner"
-          @onClickDelete="onClickDeleteCleaner"
-          @onClickDetails="onClickDetailsCleaner"
-          :data_key="dataKey"
-        />
-      </div>
+  <div>
+    <!-- Navigation with breadCrum  -->
+    <custom-navigation :breadCrumb="breadCrumb" />
+    <div v-show="true">
+      <!-- Table  -->
+      <custom-table
+        ref="toCallMethodUnSelectedRow"
+        :table_data="tableDataSchedules"
+        :columns="columnsSchedules"
+        @selected-row-data="selectedRowData"
+        @onClickCreate="onClickCreateSchedule"
+        @onClickEdit="onClickEditSchedule"
+        @onClickDelete="onClickDeleteSchedule"
+        @onClickDetails="onClickDetailsSchedule"
+      />
+      <!-- Dialog delete room  -->
+      <custom-dialog
+        ref="dialogDeleteSchedule"
+        @onClickDialogSubmit="deleteSchedule()"
+        :danger="true"
+        @onClickCloseDialog="closeDialogDeleteSchedule()"
+        :is_delete="true"
+        :footer_label="'Delete'"
+        :modal_header="'Delete Schedule'"
+      >
+        <template #bodyDialog>
+          <div class="text-center mt-4">
+            You was selected {{ selectedSchedules.length }} to delete.
+          </div>
+        </template>
+      </custom-dialog>
+      
+      
     </div>
+    <!-- Component  -->
+    <!-- Chil schedule form  -->
+    <ScheduleForm ref="toScheduleForm" @updatedSchedule="updatedSchedule" />
+  </div>
 </template>
 <script>
+import ScheduleForm from "./ScheduleForm.vue";
 export default {
   components: {
+    ScheduleForm,
   },
   data() {
     return {
-       // Bread Crumb
-       breadCrumb: [{ label: "អ្នកសម្អាត", to: "/cleaners" }],
-       // Table
-       dataKey: "cleanersID",
-      selectedTrainers: [],
-      tableDataCleaners: [],
-      columnsCleaner:[
+      trainerOptions: [],
+      roomOptions: [{ Name: "B2" }, { Name: "B3" }, { Name: "C4" }],
+      something: "",
+      // Bread Crumb
+      schoolId: this.$route.params.schoolId,
+      breadCrumb: [],
+      // Table
+      selectedSchedules: [],
+      tableDataSchedules: [],
+      columnsSchedules: [
         {
-          field: "LastName",
-          header: "នាមត្រកូល",
+          field: "Title",
+          header: "Subject's name",
         },
         {
-          field: "FirstName",
-          header: "នាមខ្លួន",
+          field: "StartDate",
+          header: "Date",
         },
         {
-          field: "Gender",
-          header: "ភេទ",
+          field: "StartTime",
+          header: "Start time",
         },
         {
-          field: "Phone",
-          header: "លេខទូរសព្ទ",
+          field: "EndTime",
+          header: "End time",
         },
         {
-          field: "Province",
-          header: "ខេត្ត",
+          field: "Trainer.Name",
+          header: "Trainer",
+        },
+        {
+          field: "Room.Name",
+          header: "Room",
         },
       ],
     };
   },
   props: {},
-  watch: {},
+  watch: {
+    // something() {
+    //   console.log("items", this.something);
+    // },
+  },
   created() {
-    this.getListCleaners()
+    this.getSchoolDetails(this.schoolId);
   },
   methods: {
-    onClickCreateCleaner() {
-      console.log('c');
-      
+    onClickCreateSchedule() {
+      this.$refs.toScheduleForm.scheduleInfoForm();
     },
-    onClickEditCleaner() {
-      console.log('e');
+    onClickEditSchedule() {
+      this.$refs.toScheduleForm.scheduleInfoForm(this.selectedSchedules[0]);
     },
-    onClickDetailsCleaner(event) {
+    onClickDetailsSchedule(event) {
       this.$router.push(`/cleaners/${event[0].cleanersID}`);
     },
-    unSelecteRowStudent() {
+    unSelecteRowSchedule() {
       this.$refs.toCallMethodUnSelectedRow.unSelectedAllRows();
     },
-    
-     // Delete trainer
-     onClickDeleteCleaner() {
-      console.log('d');
+    // Delete schedule
+    onClickDeleteSchedule() {
+      this.openDialogDeleteSchedule();
     },
     selectedRowData(data) {
-      this.selectedTrainers = data;
+      this.selectedSchedules = data;
     },
-    async getListCleaners() {
-      try {
-        let cleaners = await this.$api.school.cleaner().listCleaners();
-        if (cleaners.data) {
-          this.tableDataCleaners = cleaners.data;
-        }
-        this.unSelecteRowStudent();
-      } catch (error) {
-        console.log('List cleaners error', error);
+    async getSchoolDetails(schoolId) {
+      let school = await this.$api.school.getSchool(schoolId);
+      if (school && school.data && Object.keys(school.data).length > 0) {
+        this.breadCrumb = [];
+        this.breadCrumb.push(
+          { label: `${school.data.Name}`, to: "/" },
+          { label: "Manages", to: `/schools/${schoolId}/manages` },
+          { label: "Schedules", to: `/schools/${schoolId}/schedules` }
+        );
+        this.getListSchedules();
+      } 
+    },
+    updatedSchedule(event) {
+      if (event && event.CloseDialog) {
+        this.unSelecteRowSchedule();
+      } else {
+        this.getSchoolDetails(this.schoolId);
       }
+    },
+
+    async getListSchedules() {
+      try {
+        let schedules = await this.$api.schedule.listSchedules(this.schoolId);
+        if (schedules && schedules.data.length > 0) {
+          console.log('this.tabl', this.tableDataSchedules)
+          this.tableDataSchedules = schedules.data.map((schedule) => {
+            let splitDate = schedule.StartDate.split("T");
+            schedule.StartDate = splitDate[0];
+            return schedule;
+          });
+        } else {
+          this.tableDataSchedules = [];
+        }
+        this.unSelecteRowSchedule();
+      } catch (error) {
+        console.log("List schedules error", error);
+      }
+    },
+    async deleteSchedule() {
+      for (let item of this.selectedSchedules) {
+        await this.$api.schedule.deleteSchedule(this.schoolId, item.SCHEDULES_ID);
+      }
+      this.closeDialogDeleteSchedule();
+      this.getListSchedules();
+    },
+    openDialogDeleteSchedule() {
+      this.$refs.dialogDeleteSchedule.openDialog();
+    },
+    closeDialogDeleteSchedule() {
+      this.$refs.dialogDeleteSchedule.closeDialog();
+      this.unSelecteRowSchedule();
     },
   },
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-
-</style>
+<style scoped></style>
