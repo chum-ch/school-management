@@ -28,5 +28,17 @@
     "img": "https://icon-library.com/images/class-icon/class-icon-9.jpg",
     "title": "Classes",
     "description": "Manage all classes in school"
+  },
+  {
+    "name": "courses",
+    "img": "",
+    "title": "courses",
+    "description": "Manage all courses in school"
+  },
+  {
+    "name": "generations",
+    "img": "",
+    "title": "generations",
+    "description": "Manage all generations in school"
   }
 ]

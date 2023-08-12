@@ -1,6 +1,6 @@
 <template>
   <div class="sticky top-0 z-5 blur">
-    <div class=" d-flex justify-content-between align-items-center mx-3">
+    <div class="d-flex justify-content-between align-items-center mx-3">
       <h4>SMS</h4>
       <!-- <marquee width="60%" direction="left" height="" class=""
         >ប្រព័ន្ធគ្រប់គ្រងសាលារៀន សូមស្វាគមន៏!</marquee
@@ -12,11 +12,11 @@
           srcset=""
           width="50"
           class="cursor-pointer"
-          @click="$event=>visible = true"
+          @click="($event) => (visible = true)"
         />
       </div>
     </div>
-    <breadcrumb-primevue :home="home" :model="breadCrumb"  class="m-0" />
+    <breadcrumb-primevue :home="home" :model="breadCrumb" class="m-0" />
   </div>
 </template>
 <script>
@@ -28,6 +28,7 @@ export default {
         icon: "pi pi-home",
         to: "/",
       },
+      breadCrumbs: this.breadCrumb,
       // breadCrumb: [
       //   { label: "Login", to: "/login" },
       //   { label: "Notebook" },
@@ -37,18 +38,22 @@ export default {
       // ],
     };
   },
-  props:{
+  updated() {
+   
+  },
+  props: {
     breadCrumb: Array,
   },
-  emits: [],
-  components: {
-
-  },
+  watch: {},
+  emits: ["updatedBreadCrumb"],
+  components: {},
+  created() {},
   methods: {},
 };
 </script>
 <style scoped>
 .p-breadcrumb {
+  padding: 0px 0px 10px 10px;
   border-top: none;
   border-right: none;
   border-left: none;

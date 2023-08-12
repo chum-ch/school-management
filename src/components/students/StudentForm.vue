@@ -74,6 +74,7 @@ export default {
   data() {
     return {
       schoolId: this.$route.params.schoolId,
+      generationId: this.$route.params.generationId,
       studentID: "",
       // Form student
       gender: "",
@@ -159,12 +160,14 @@ export default {
           if (this.studentID) {
             student = await this.$api.student.updateStudent(
               this.schoolId,
+              this.generationId,
               this.studentForm,
               this.studentID
             );
           } else {
             student = await this.$api.student.createStudent(
               this.schoolId,
+              this.generationId,
               this.studentForm
             );
           }

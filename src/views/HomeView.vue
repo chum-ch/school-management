@@ -86,7 +86,6 @@ export default {
   watch: {},
   created() {
     this.items = data;
-   
     this.getSchoolDetails(this.schoolId);
   },
 
@@ -94,8 +93,7 @@ export default {
     async getSchoolDetails(schoolId) {
       let school = await this.$api.school.getSchool(schoolId)
       if(school && school.data && Object.keys(school.data).length > 0){
-        this.breadCrumb = [];
-        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Manages', to: `/schools/${schoolId}/manages` })
+        this.breadCrumb = [{ label: `${school.data.Name}`, to: '/' }, { label: 'Manages', to: `/schools/${schoolId}/manages` }];
       }
     },
     list(screen) {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <FullCalendar class="m-2" :options="calendarOptions" />
+    <FullCalendar class="w-100" :options="calendarOptions" :events="events" />
   </div>
 </template>
 
@@ -47,23 +47,43 @@ export default defineComponent({
         allDaySlot: false, // Disable the all-day slot
 
         // Events
+         // Get calendar event form parent
+         eventClick: this.editEventCalendar,
+        eventDidMount: function (info) {
+          const teacher = info.event.extendedProps.teacherName;
+          const roomName = info.event.extendedProps.roomName;
+          const className = info.event.extendedProps.className;
+          info.el.querySelector(
+            ".fc-event-title"
+          ).innerHTML += `<div class="float-end">${roomName}</div><br>${className}<br>${teacher}`;
+        },
         events: [
           {
-            title: "Vue js",
-            start: "2023-06-09T07:30:00",
-            end: "2023-06-09T09:00:00",
+            title: "",
+            start: "",
+            end: "",
+            extendedProps: {
+              className: "",
+              teacherName: "",
+              roomName: "",
+            },
           },
-          {
-            title: "event 1",
-            date: "2023-06-10",
-          },
-          { title: "event 2", start: "2023-06-14T07:30:00" },
-          {
-            title: "Birthday Party",
-            start: "2023-06-11T00:00:00",
-            end: "2023-06-11T24:00:00",
-            backgroundColor: "green",
-          },
+          // {
+          //   title: "Vue js",
+          //   start: "2023-06-09T07:30:00",
+          //   end: "2023-06-09T09:00:00",
+          // },
+          // {
+          //   title: "event 1",
+          //   date: "2023-06-10",
+          // },
+          // { title: "event 2", start: "2023-06-14T07:30:00" },
+          // {
+          //   title: "Birthday Party",
+          //   start: "2023-06-11T00:00:00",
+          //   end: "2023-06-11T24:00:00",
+          //   backgroundColor: "green",
+          // },
         ],
 
         // Toolbar
@@ -71,20 +91,39 @@ export default defineComponent({
         headerToolbar: {
           // left: "today,timeGridDay,timeGridWeek,dayGridMonth,multiMonthYear,listMonth",
           start: "prev,next today timeGridWeek",
-          end: "dayGridMonth,multiMonthYear,listMonth",
+          end: "dayGridMonth,multiMonthYear",
           center: "title",
         },
         views: {
-          timeGridWeek: { buttonText: "Week" },
-          //   dayGridMonth: { buttonText: "Month" },
+          timeGridWeek: { buttonText: "week" },
+          multiMonthYear: { buttonText: "Year" },
+          dayGridMonth: { buttonText: "Month" },
           //   dayGridWeek: { buttonText: "Week" },
           //   listMonth: { buttonText: "Event" },
         },
       },
     };
   },
-
+  emits: ["updateEvent"],
+  props: {
+    events: Array,
+  },
+  watch: {},
+  updated() {
+    this.displayEvent();
+  },
+  created() {
+    this.displayEvent();
+  },
   methods: {
+    editEventCalendar(info){
+      this.$emit('updateEvent', info.event._def)
+    },
+    displayEvent() {
+      if (this.events) {
+        this.calendarOptions.events = this.events;
+      }
+    },
     handleDateClick: function (arg) {
       console.log(arg);
     },
@@ -92,10 +131,17 @@ export default defineComponent({
 });
 </script>
 <style>
+.fc-event-title-container {
+  padding: 5px;
+  font-size: 12px;
+}
 .fc .fc-col-header-cell-cushion,
 .fc-timegrid-axis-cushion,
 .fc-daygrid-day-number {
   text-decoration: none;
   color: gray;
+}
+.fc-event-time {
+  display: none;
 }
 </style>

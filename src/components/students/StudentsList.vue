@@ -49,9 +49,14 @@ export default {
       breadCrumb: [],
       // Table
       schoolId: this.$route.params.schoolId,
+      generationId: this.$route.params.generationId,
       selectedStudent: [],
       tableDataStudents: [],
       columnsStudent: [
+        {
+          field: "ProfileURL",
+          header: "Profile",
+        },
         {
           field: "ID",
           header: "Student's ID",
@@ -94,8 +99,8 @@ export default {
       this.$refs.refToChildStudentForm.onlyUpdateStudent(this.selectedStudent[0]);
     },
     onClickDetailsStudent(event) {
-      console.log("details", event);
-      // this.$router.push(`/students/${event[0].studentsID}`);
+      
+      this.$router.push(`students/${event[0].STUDENTS_ID}`);
     },
     unSelecteRowStudent() {
       this.$refs.refToChildCustomTable.unSelectedAllRows();
@@ -103,21 +108,40 @@ export default {
     selectedRowData(data) {
       this.selectedStudent = data;
     },
+
     async getSchoolDetails(schoolId) {
       let school = await this.$api.school.getSchool(schoolId);
       if (school && school.data && Object.keys(school.data).length > 0) {
-        this.breadCrumb = [];
-        this.breadCrumb.push(
-          { label: `${school.data.Name}`, to: "/" },
-          { label: "Manages", to: `/schools/${schoolId}/manages` },
-          { label: "Students", to: `/schools/${schoolId}/students` }
-        );
-        this.getListStudent();
+        school = school.data;
       }
+      let generation = await this.$api.generation.getGeneration(
+        this.schoolId,
+        this.generationId
+      );
+      if (generation && generation.data && Object.keys(generation.data).length > 0) {
+        generation = generation.data;
+      }
+      this.breadCrumb =
+        [{ label: `${school.Name}`, to: "/" },
+        { label: "Manages", to: `/schools/${schoolId}/manages` },
+        {
+          label: `${generation.Name}`,
+          to: `/schools/${schoolId}/generations`,
+        },
+        {
+          label: "Students",
+          to: `/schools/${this.schoolId}/generations/${this.generationId}/students`,
+        }
+      ]
+      this.getListStudent();
     },
+
     async getListStudent() {
       try {
-        let students = await this.$api.student.listStudents(this.schoolId);
+        let students = await this.$api.student.listStudents(
+          this.schoolId,
+          this.generationId
+        );
         if (students && students.data && students.data.length > 0) {
           this.tableDataStudents = students.data;
         } else {
@@ -143,7 +167,7 @@ export default {
     },
     async deleteStudent() {
       for (let item of this.selectedStudent) {
-        await this.$api.student.deleteStudent(this.schoolId, item.STUDENTS_ID);
+        await this.$api.student.deleteStudent(this.schoolId, this.generationId, item.STUDENTS_ID);
       }
       this.closeDialogDeleteStudent();
       this.getListStudent();

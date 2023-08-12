@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-1">
     <section class="flex flex-column">
     <div>
       <label for="date">Date<span v-if="required" class="text-red-500"> *</span></label>

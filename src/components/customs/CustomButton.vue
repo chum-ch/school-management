@@ -47,6 +47,10 @@
             ? 'pi pi-times'
             : plus_icon
             ? 'pi pi-plus'
+            : image_icon
+            ? 'pi pi-images'
+            : cloud_icon
+            ? 'pi pi-cloud-upload'
             : ''
         "
       />
@@ -81,6 +85,8 @@ export default {
     delete_icon: Boolean,
     cancel_icon: Boolean,
     plus_icon: Boolean,
+    image_icon: Boolean,
+    cloud_icon: Boolean,
     is_link: Boolean,
     disabled: Boolean,
     secondary: Boolean,

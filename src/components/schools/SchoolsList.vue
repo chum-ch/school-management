@@ -2,7 +2,7 @@
   <div class="hello">
     <!-- Navigation with breadCrum  -->
     <!-- <custom-navigation :home="home" /> -->
-    <div class="row row-cols-1 row-cols-md-4 row-cols-sm-2 px-1">
+    <div v-show="true" class="row row-cols-1 row-cols-md-4 row-cols-sm-2 px-1">
       <div v-for="(item, index) in schoolItems" :key="index" class="col">
         <div class="card h-100 custom transition-duration-500">
           <div
@@ -61,9 +61,14 @@ export default {
   },
   methods: {
     async getSchoolsList() {
-      let schools = await this.$api.school.listSchools();
-      if (schools && schools.data && schools.data.length > 0) {
-        this.schoolItems = schools.data;
+      try {
+        let schools = await this.$api.school.listSchools();
+        if (schools && schools.data && schools.data.length > 0) {
+          this.schoolItems = schools.data
+        }
+        
+      } catch (error) {
+        console.log('e', error);
       }
     },
     manage(id) {

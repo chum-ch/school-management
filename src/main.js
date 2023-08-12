@@ -13,6 +13,7 @@ import "primevue/resources/themes/lara-light-blue/theme.css"
 // import "./assets/theme.css";     
 //core
 import "primevue/resources/primevue.min.css";
+
 //icons
 import "primeicons/primeicons.css";
 // Bootstrap
@@ -34,6 +35,9 @@ import Sidebar from 'primevue/sidebar';
 import ScrollPanel from 'primevue/scrollpanel';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import Splitter from 'primevue/splitter';
+import SplitterPanel from 'primevue/splitterpanel';
+import FileUpload from 'primevue/fileupload';
 
 // Custom component
 import NavigationView from "./views/NavigationView.vue";
@@ -49,6 +53,10 @@ import CustomCalendar from './components/customs/CustomCalendar.vue';
 import CustomInputMask from './components/customs/CustomInputMask.vue';
 import CustomDropdown from './components/customs/CustomDropdown.vue';
 import CustomRadioButton from './components/customs/CustomRadioButton.vue';
+import CustomTab from './components/customs/CustomTab.vue';
+import CustomPeopleProfile from './components/customs/CustomPeopleProfile.vue';
+import PeopleProfile from './components/customs/PeopleProfile.vue';
+import CustomCropImg from './components/customs/CustomCropImg.vue';
 const app = createApp(App);
 // Config Axios 
 // const axiosInstance = axios.create({
@@ -76,6 +84,9 @@ app.component('sidebar-primevue', Sidebar);
 app.component('scrollpanel-primevue', ScrollPanel);
 app.component('tab-view-primevue', TabView);
 app.component('tab-panel-primevue', TabPanel);
+app.component('splitter-primevue', Splitter);
+app.component('file-upload-primevue', FileUpload);
+app.component('splitter-panel-primevue', SplitterPanel);
 
 // Custom
 app.component('custom-navigation', NavigationView);
@@ -91,6 +102,10 @@ app.component('custom-calendar', CustomCalendar);
 app.component('custom-input-mask', CustomInputMask);
 app.component('custom-dropdown', CustomDropdown);
 app.component('custom-radio-button', CustomRadioButton);
+app.component('custom-tab', CustomTab);
+app.component('custom-people-profile', CustomPeopleProfile);
+app.component('custom-profile', PeopleProfile);
+app.component('custom-crop-img', CustomCropImg);
 
 const vuetify = createVuetify({
   components,

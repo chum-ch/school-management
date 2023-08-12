@@ -44,7 +44,7 @@
       <DataTable
         :value="table_data"
         scrollable
-        scrollHeight="500px"
+        scrollHeight="450px"
         class="p-datatable-sm"
         tableStyle="min-width: 50rem"
         :rowHover="true"
@@ -63,19 +63,39 @@
         v-model:selection="selection"
         v-model:filters="filters"
       >
-      
         <template #empty>
-        <div v-if="table_data.length !==0">
-          The <span class="text-danger fw-bolder"> {{ filters["global"].value }}</span> is not found! 🥺
-        </div>
-          </template
-        >
+          <div v-if="table_data.length !== 0">
+            The
+            <span class="text-danger fw-bolder"> {{ filters["global"].value }}</span> is
+            not found! 🥺
+          </div>
+        </template>
         <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
         <template v-for="(item, index) in columns" :key="index">
           <Column
             :field="item.field"
             :header="item.header"
             headerStyle="width: 3rem"
+            v-if="item.field === 'ProfileURL'"
+          >
+            <template #body="{ data }">
+              <img
+                :src="
+                  data.ProfileURL
+                    ? data.ProfileURL
+                    : 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'
+                "
+                alt=""
+                class="`flag rounded-circle"
+                style="width: 30px"
+              />
+            </template>
+          </Column>
+          <Column
+            :field="item.field"
+            :header="item.header"
+            headerStyle="width: 3rem"
+            v-else
           >
           </Column>
         </template>
@@ -118,9 +138,15 @@ export default {
     msg: String,
     table_data: Array,
     columns: Array,
-    data_key: String
+    data_key: String,
   },
-  emits: ["selected-row-data", "onClickCreate", "onClickDelete", "onClickDetails", "onClickEdit"],
+  emits: [
+    "selected-row-data",
+    "onClickCreate",
+    "onClickDelete",
+    "onClickDetails",
+    "onClickEdit",
+  ],
   watch: {
     selection: {
       immediate: true,
@@ -156,9 +182,9 @@ export default {
       this.emitSelectedRowData("unSelectRow");
     },
     unSelectedAllRows() {
-      this.disabledDetails =true
-      this.disabledDelete =true
-      this.selection =[]
+      this.disabledDetails = true;
+      this.disabledDelete = true;
+      this.selection = [];
       this.emitSelectedRowData("unSelectAllRow");
     },
     selectedAllRows(event) {

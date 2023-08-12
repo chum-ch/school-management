@@ -1,62 +1,95 @@
 <template>
-  <div>
+  <div class="overflow-hidden h-screen">
     <custom-navigation :breadCrumb="breadCrumb" />
-    <div class="hello flex">
-      <custom-details :full_name="fullName" :email="email">
+    <div class="gap-2 p-2" style="display: grid; grid-template-columns: 30% 70%">
+      <custom-people-profile
+        :fullName="fullName"
+        :email="email"
+        :ProfileURL="ProfileURL"
+        @onClick="changProfile"
+      >
         <template #view_info>
-          <custom-view-info :items_view_info="viewInfo" />
+          <custom-view-info
+            v-for="(item, index) in itemsViewInfo"
+            :key="index"
+            :label="item.label"
+            :value="item.value"
+          >
+          </custom-view-info>
         </template>
-        <template #view_tab>
-          <tab-view-primevue>
-            <tab-panel-primevue header="កាលវិភាគ">
-              <custom-full-calendar/>
-            </tab-panel-primevue>
-            <tab-panel-primevue header="គ្រួសារ" class="col-12"> F
-             </tab-panel-primevue>
-            <tab-panel-primevue header="ការសិក្សា">
-            <custom-button/>
-            S
-             </tab-panel-primevue>
-            <tab-panel-primevue header="អវត្តមាន"> A </tab-panel-primevue>
-          </tab-view-primevue>
+      </custom-people-profile>
+      <custom-tab :dataTabs="dataTabs" class="pe-2">
+        <template #DetailsStudent>
+          <img :src="myImge" alt="" />
         </template>
-      </custom-details>
+        <template #Schedule>
+          <custom-full-calendar />
+        </template>
+      </custom-tab>
     </div>
+    <custom-crop-img ref="refToChildCropImg" @image="handleSubmit" />
   </div>
 </template>
 
 <script>
+// import StudentsList from "./StudentsList.vue";
 export default {
-  components: {},
+  components: {
+    // StudentsList,
+  },
   data() {
     return {
+      ProfileURL: "",
+      myImge: "",
+      // Profile
       fullName: "",
       email: "",
-      values: "",
-      // Bread Crum
-      breadCrumb: [{ label: "សិស្ស", to: "/students" }],
-      viewInfo: [
+      // Bread crumb
+      breadCrumb: [],
+      itemsViewInfo: [
         {
-          label: "លេខសម្គាល់",
-          key: "ID",
+          label: "Gender",
+          path: "Gender",
         },
         {
-          label: "ថ្នាក់រៀន",
-          key: "Class",
+          label: "Province",
+          path: "",
         },
         {
-          label: "នាមត្រកូល",
-          key: "LastName",
+          label: "ID",
+          path: "ID",
         },
         {
-          label: "នាមខ្លួន",
-          key: "FirstName",
+          label: "Generation name",
+          path: "GenerationName",
         },
         {
-          label: "ភេទ",
-          key: "Gender",
+          label: "Class",
+          path: "Class.Name",
+        },
+        {
+          label: "Room",
+          path: "Class.Room.Name",
         },
       ],
+      // Tabs
+      dataTabs: [
+        {
+          Active: true,
+          TabName: "Overview",
+          ComponentName: "DetailsStudent",
+        },
+        {
+          TabName: "Schedule",
+          ComponentName: "Schedule",
+        },
+      ],
+      // School id
+      schoolId: this.$route.params.schoolId,
+      // Generation id
+      generationId: this.$route.params.generationId,
+      // Student id
+      studentId: this.$route.params.studentId,
     };
   },
   props: {
@@ -65,32 +98,61 @@ export default {
   emits: [""],
   watch: {},
   created() {
-    this.detailsStudent(this.$route.params.id);
+    this.getSchoolDetails(this.schoolId);
   },
   methods: {
-    testingClick() {
-      console.log("dd");
+    changProfile() {
+      this.$refs.refToChildCropImg.openDialogCropImg();
     },
-    async detailsStudent(id) {
-      try {
-        if (id) {
-          let getStuent = await this.$api.school.student().getStudent(id);
-          if (getStuent.data) {
-            this.fullName = `${getStuent.data[0].LastName} ${getStuent.data[0].FirstName}`;
-            this.email = `${getStuent.data[0].Email}`;
-            this.viewInfo = this.$globalFunction.sectionViewInfo(
-              this.viewInfo,
-              getStuent.data[0]
-            );
-            this.breadCrumb.push({
-              label: `${this.fullName}`,
-              to: `/students/${this.$route.params.id}`,
-            });
-          }
-        }
-      } catch (error) {
-        console.log("Error details student", error);
+    async handleSubmit(imageFile) {
+      const formData = new FormData();
+      formData.append("image", imageFile);
+      const uploadImage = await this.$api.student.uploadImage(this.studentId, formData);
+      this.ProfileURL = uploadImage.data.ProfileURL;
+    },
+    async getSchoolDetails(schoolId) {
+      let school = await this.$api.school.getSchool(schoolId);
+      if (school && school.data && Object.keys(school.data).length > 0) {
+        school = school.data;
       }
+      let generation = await this.$api.generation.getGeneration(
+        this.schoolId,
+        this.generationId
+      );
+      if (generation && generation.data && Object.keys(generation.data).length > 0) {
+        generation = generation.data;
+      }
+      let student = await this.$api.student.getStudent(
+        this.schoolId,
+        this.generationId,
+        this.studentId
+      );
+      if (student && student.data && Object.keys(student.data).length > 0) {
+        student = { ...student.data, GenerationName: generation.Name };
+        this.ProfileURL = student.ProfileURL;
+        this.fullName = `${student.LastName} ${student.FirstName}`;
+        this.email = student.Email;
+        this.itemsViewInfo = this.$globalFunction.getValueNtestedObject(
+          this.itemsViewInfo,
+          student
+        );
+      }
+      this.breadCrumb = [
+        { label: `${school.Name}`, to: "/" },
+        { label: "Manages", to: `/schools/${schoolId}/manages` },
+        {
+          label: `${generation.Name}`,
+          to: `/schools/${schoolId}/generations`,
+        },
+        {
+          label: "Students",
+          to: `/schools/${this.schoolId}/generations/${this.generationId}/students`,
+        },
+        {
+          label: this.fullName,
+          to: `/schools/${this.schoolId}/generations/${this.generationId}/students/${this.studentId}`,
+        },
+      ];
     },
   },
 };
@@ -101,5 +163,9 @@ export default {
 * {
   margin: 0;
   padding: 0;
+}
+.aaa {
+  overflow-y: scroll;
+  height: 100vh;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-  <div class="p-fluid">
+  <div class="mb-1 p-fluid">
     <label v-if="label !== ''">{{ label }} </label>
     <span v-if="required" class="text-red-500"> *</span>
-    <div class="my-1" v-if="show_icon">
+    <div class="" v-if="show_icon">
       <span :class="right_icon ? 'p-input-icon-right' : 'p-input-icon-left'">
         <i
           :class="
@@ -26,7 +26,7 @@
         />
       </span>
     </div>
-    <div class="my-1" v-else>
+    <div class="" v-else>
       <InputText
         :style="{ border: border }"
         :class="required && message_error !== '' ? p_invalid : ''"

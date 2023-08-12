@@ -10,6 +10,8 @@ import RoomsRouter from '../components/rooms/route';
 import StudentsRouter from '../components/students/route';
 import CleanersRouter from '../components/cleaners/route';
 import SchedulesRouter from '../components/schedules/route';
+import CoursesRouter from '../components/courses/route';
+import GenerationsRouter from '../components/generations/route';
 
 const routes = [
   ...SchoolsRouter,
@@ -19,6 +21,8 @@ const routes = [
   ...StudentsRouter,
   ...CleanersRouter,
   ...SchedulesRouter,
+  ...CoursesRouter,
+  ...GenerationsRouter,
   {
     path: '/schools/:schoolId/manages',
     name: 'home',

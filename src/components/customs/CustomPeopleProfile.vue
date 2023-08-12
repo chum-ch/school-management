@@ -1,27 +1,20 @@
 <template>
-  <div>
-    <div class="hello flex p-2 column-gap-2">
-      <div class="shadow-8 md:shadow-2 surface-overlay p-2 w-29rem h-full">
-        <div class="text-center">
-          <div class="my-3 flex justify-content-center flex-wrap">
-            <div class="profile-picture" :style="style">
-              <img
-                src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png"
-              />
-            </div>
-          </div>
-          <h3>{{ fullName }}</h3>
-          <p>{{ email }}</p>
+  <!-- <div class="profile-picture">
+      <img src="../../assets/img/school-1.png" />
+    </div> -->
+  <div class="shadow-8 md:shadow-2 surface-overlay h-full p-2">
+    <div class="text-center">
+      <div class="my-3 flex justify-content-center flex-wrap " @click="$emit('onClick')">
+        <div class="profile-picture" :style="style">
+          <!-- :src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png" -->
+          <img :src="ProfileURL ? ProfileURL : defaultImg" />
         </div>
-        <divider-primevue />
-        <slot name="view_info"></slot>
       </div>
-
-      <div class="w-full">
-      
-        <slot name="view_tab"></slot>
-      </div>
+      <h3>{{ fullName }}</h3>
+      <p>{{ email }}</p>
     </div>
+    <divider-primevue />
+    <slot name="view_info"></slot>
   </div>
 </template>
 
@@ -29,15 +22,19 @@
 export default {
   components: {},
   data() {
-    return {};
+    return {
+      defaultImg:
+        "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
+    };
   },
   props: {
     msg: String,
     fullName: String,
     email: String,
     style: Object,
+    ProfileURL: String,
   },
-  emits: [""],
+  emits: ["onClick"],
   watch: {
     // values: {
     //   immediate: true,
