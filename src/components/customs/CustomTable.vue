@@ -1,11 +1,14 @@
 <template>
   <div>
     <div class="action flex justify-content-between flex-wrap mx-3">
-      <div class="flex justify-content-start flex-wrap">
+      <div class="flex justify-content-start flex-wrap"
+      v-if="!isHideAction"
+      >
         <custom-button
           :label="'Add'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickCreate', $event)"
+          v-if="!isHideAddBtn"
         />
         <custom-button
           :label="'Edit'"
@@ -13,6 +16,7 @@
           @onClick="($event) => $emit('onClickEdit', $event)"
           :outlined="true"
           :disabled="disabledDetails"
+          v-if="!isHideEditBtn"
         />
         <custom-button
           :label="'Delete'"
@@ -21,6 +25,7 @@
           :danger="true"
           :outlined="true"
           :disabled="disabledDelete"
+          v-if="!isHideDeleteBtn"
         />
         <custom-button
           :label="'More'"
@@ -29,6 +34,7 @@
           :warning="true"
           :outlined="true"
           :disabled="disabledDetails"
+          v-if="isHideDetailsBtn"
         />
       </div>
       <custom-input-text
@@ -37,6 +43,7 @@
         :show_icon="true"
         :left_icon="true"
         :search_icon="true"
+        class=""
       />
     </div>
     <div class="m-1">
@@ -56,6 +63,7 @@
         @row-unselect-all="unSelectedAllRows"
         paginator
         :rows="9"
+        @row-click="onRowClick($event, data)"
         :rowsPerPageOptions="[9, 50, 100]"
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="Showing from {first} to {last} of {totalRecords}"
@@ -87,7 +95,7 @@
                 "
                 alt=""
                 class="`flag rounded-circle"
-                style="width: 30px"
+                style="width: 35px"
               />
             </template>
           </Column>
@@ -139,6 +147,11 @@ export default {
     table_data: Array,
     columns: Array,
     data_key: String,
+    isHideAddBtn: Boolean,
+    isHideEditBtn: Boolean,
+    isHideDeleteBtn: Boolean,
+    isHideDetailsBtn: Boolean,
+    isHideAction: Boolean,
   },
   emits: [
     "selected-row-data",
@@ -174,6 +187,9 @@ export default {
     this.initFilters();
   },
   methods: {
+    onRowClick(data){
+      this.$emit('onClickDetails', [data.data])
+    },
     selectedRow() {
       this.emitSelectedRowData("selectRow");
     },

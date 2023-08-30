@@ -2,6 +2,8 @@
   <div>
     <!-- Navigation with breadCrum  -->
     <custom-navigation :breadCrumb="breadCrumb" />
+    
+    
     <div v-show="true">
       <!-- Table  -->
       <custom-table
@@ -16,10 +18,7 @@
       />
     </div>
     <!-- Chil trainer form  -->
-    <TrainerForm
-      ref="refToChildTrainerForm"
-      @updatedTrainer="updatedTrainer"
-    />
+    <TrainerForm ref="refToChildTrainerForm" @updatedTrainer="updatedTrainer" />
     <!-- Dialog delete trainer  -->
     <custom-dialog
       ref="refToChildCustomDialogDeleteTrainer"
@@ -40,12 +39,26 @@
 </template>
 <script>
 import TrainerForm from "./TrainerForm.vue";
+
 export default {
   components: {
     TrainerForm,
   },
   data() {
     return {
+      // Exam 
+      examSections: {},
+      // Checkbox
+      gender: "",
+      checkBoxCategories: [
+        {
+          Value: "Male",
+        },
+        {
+          Value: "Female",
+          Disable: true,
+        },
+      ],
       schoolId: this.$route.params.schoolId,
       // Bread Crumb
       breadCrumb: [],
@@ -121,6 +134,7 @@ export default {
     },
     async getListTrainers() {
       try {
+        
         let trainers = await this.$api.trainer.listTrainers(this.schoolId);
         if (trainers && trainers.data && trainers.data.length > 0) {
           this.tableDataTrainers = trainers.data;

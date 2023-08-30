@@ -57,6 +57,14 @@ export default {
           field: "Name",
           header: "Course name",
         },
+        {
+          field: "Credit",
+          header: "Credit",
+        },
+        {
+          field: "Class.Name",
+          header: "Class",
+        },
       ],
     };
   },

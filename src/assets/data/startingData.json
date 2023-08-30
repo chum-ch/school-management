@@ -1,44 +1,44 @@
 [
   {
-    "name": "students",
-    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRjIct9asHbaJe0FKC-sRsRG05dqUFqAI8_3WDLyB-x5kEsStDc",
-    "title": "Students",
-    "description": "Manage all students in school."
-  },
-  {
     "name": "trainers",
-    "img": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTaTO-mXO-lPjxavDgafI2LFHFclb1-rUxshw0DFKhSREupDuKW",
+    "img": "https://img.icons8.com/glyph-neue/64/228BE6/classroom.png",
     "title": "Trainers",
     "description": "Manage all trainers in school."
   },
   {
     "name": "rooms",
-    "img": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQfoNJIa0Hw8OI0chJ3TndaqeR7nvOpjhU_kOkYGESXsSnuNp_E",
+    "img": "https://img.icons8.com/wired/64/228BE6/room.png",
     "title": "Rooms",
     "description": "Manage all rooms in school"
   },
   {
     "name": "schedules",
-    "img": "https://cdn-icons-png.flaticon.com/512/4206/4206324.png",
+    "img": "https://img.icons8.com/external-smashingstocks-detailed-outline-smashing-stocks/66/228BE6/external-schedule-business-smashingstocks-detailed-outline-smashing-stocks.png",
     "title": "Schedules",
     "description": "Manage all schedules in school"
   },
   {
     "name": "classes",
-    "img": "https://icon-library.com/images/class-icon/class-icon-9.jpg",
+    "img": "https://img.icons8.com/wired/64/228BE6/class.png",
     "title": "Classes",
     "description": "Manage all classes in school"
   },
   {
     "name": "courses",
-    "img": "",
+    "img": "https://img.icons8.com/external-others-phat-plus/64/228BE6/external-courses-online-courses-outline-others-phat-plus-36.png",
     "title": "courses",
     "description": "Manage all courses in school"
   },
   {
     "name": "generations",
-    "img": "",
+    "img": "https://img.icons8.com/external-kmg-design-glyph-kmg-design/64/228BE6/external-graduation-back-to-school-kmg-design-glyph-kmg-design-2.png",
     "title": "generations",
     "description": "Manage all generations in school"
+  },
+  {
+    "name": "exams",
+    "img": "https://img.icons8.com/external-vitaliy-gorbachev-lineal-vitaly-gorbachev/100/228BE6/external-exam-online-learning-vitaliy-gorbachev-lineal-vitaly-gorbachev.png",
+    "title": "exams",
+    "description": "Manage all exams in school"
   }
 ]

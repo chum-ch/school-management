@@ -75,11 +75,11 @@ export default {
       // Tabs
       dataTabs: [
         {
-          Active: true,
           TabName: "Overview",
           ComponentName: "DetailsStudent",
         },
         {
+          Active: true,
           TabName: "Schedule",
           ComponentName: "Schedule",
         },

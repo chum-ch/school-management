@@ -55,7 +55,7 @@ export default {
       columnsGeneration: [
         {
           field: "Name",
-          header: "Generation name",
+          header: "Generation",
         },
         {
           field: "StudentNumber",

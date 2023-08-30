@@ -1,27 +1,23 @@
 <template>
   <div class="p-fluid">
-    <label v-if="label !== ''" class="mb-2" :class="hideLabel  ? 'd-none' : ''"
-      >{{ label }}
-    </label>
+    <label v-if="label !== ''" class="mb-2" :class="hideLabel  ? 'd-none' : ''">{{ label }} </label>
     <div
       :class="
         isFlex ? 'flex flex-wrap column-gap-3' : 'flex flex-column flex-wrap row-gap-2'
       "
     >
       <div
-        v-for="(item, index) in categories"
+        v-for="(item, index) in checkBoxCategories"
         :key="index"
-        class="flex align-items-center "
+        class="flex align-items-center"
       >
-        <div 
-        v-if="item.Text"
-        >
-        <RadioButton
+        <checkbox-primevue
           v-model="values"
           :inputId="item.Value"
-          name="radio"
+          name="checkBox"
           :value="item"
           :disabled="item.Disable"
+          @input="inputValue"
         />
         <label
           :for="item.Value"
@@ -29,17 +25,14 @@
           :style="item.Disable ? objectStyleCSS : ''"
           >{{ item.Value }}</label
         >
-        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import RadioButton from "primevue/radiobutton";
 export default {
   components: {
-    RadioButton,
   },
   data() {
     return {
@@ -52,8 +45,8 @@ export default {
     };
   },
   props: {
-    categories: Array,
-    defaultValue: String,
+    checkBoxCategories: Array,
+    defaultValue: Array,
     label: String,
     isFlex: Boolean,
     hideLabel: Boolean,
@@ -61,12 +54,13 @@ export default {
   },
   emits: ["update:modelValue"],
   watch: {
-    values: {
-      immediate: true,
-      handler(data) {
-        this.$emit("update:modelValue", data);
-      },
-    },
+    // values: {
+    //   immediate: true,
+    //   handler(data) {
+    //     console.log('cech', data);
+    //     this.$emit("update:modelValue", data);
+    //   },
+    // },
     message_error: {
       immediate: true,
       handler(data) {
@@ -76,9 +70,12 @@ export default {
       },
     },
   },
-  created() {
+  created() {},
+  methods: {
+    inputValue(data){
+      this.$emit("update:modelValue", data)
+    }
   },
-  methods: {},
 };
 </script>
 

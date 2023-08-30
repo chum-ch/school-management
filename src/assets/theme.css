@@ -40,7 +40,7 @@
   --surface-overlay: #ffffff;
   --surface-border: #dee2e6;
   --surface-hover: #e9ecef;
-  --focus-ring: 0 0 0 0.2rem rgba(38, 143, 255, 0.5);
+  --focus-ring: 0 0 0 0.2rem #268fff80;
   --maskbg: rgba(0, 0, 0, 0.4);
   --highlight-bg: #007bff;
   --highlight-text-color: #ffffff;

@@ -1,8 +1,9 @@
 <template>
   <div class="p-fluid">
-    <div class="my-1 text-white">
+    <div class="my-1 text-white" :style="disabled ? objectStyleCSS : ''">
       <Button
         @click="($event) => $emit('onClick', $event)"
+        :style="style"
         :badge="badge"
         :type="type ? type : 'button'"
         v-show="hide ? false : true"
@@ -67,11 +68,15 @@ export default {
     Button,
   },
   data() {
-    return {};
+    return {
+      objectStyleCSS: {
+        cursor: "not-allowed",
+      },
+    };
   },
   props: {
     badge: String,
-    msg: String,
+    style: Object,
     normal: Boolean,
     large: Boolean,
     hide: Boolean,
@@ -110,4 +115,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 </style>

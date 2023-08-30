@@ -8,13 +8,14 @@
         ref="inputmask"
         class=""
         v-model="values"
+        :class="[required || message_error !== '' ? p_invalid : '']"
         :mask="mask"
         :placeholder="placeholder"
         @update:modelValue="updateModelValue"
       />
       <small v-if="message_errors !== ''" class="flex text-red-500">
         {{ message_errors }}
-        <i :class="message_errors ? 'pi pi-info-circle' : ''" style="margin: 2px" />
+        <i :class="message_errors ? 'pi pi-info-circle' : ''" style="margin: 3px" />
       </small>
     </section>
   </div>

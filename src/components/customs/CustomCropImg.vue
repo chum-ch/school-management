@@ -48,7 +48,7 @@
             </div>
             <divider-primevue layout="vertical" />
             <div class="result">
-              <h3>Restult</h3>
+              <h3>Result</h3>
               <custom-profile :ProfileURL="image.src"> </custom-profile>
               <!-- <custom-button class="" :label="'Save'" @onClick="save" /> -->
             </div>
@@ -87,6 +87,7 @@ export default {
       img: "http://127.0.0.1:3003/1691742117993-20230324_094750.jpg",
       isCrop: true,
       isSave: true,
+
       image: {
         name: null,
         type: null,
@@ -104,6 +105,7 @@ export default {
     },
     closeDialogCropImg() {
       this.$refs.refToChildCustomDialog.closeDialog();
+      this.setDefaultValue();
     },
 
     openFileInput() {
@@ -149,6 +151,16 @@ export default {
     save() {
       this.$emit("image", this.blob);
       this.closeDialogCropImg();
+    },
+    setDefaultValue() {
+      this.isSave = true;
+      this.blob = null;
+      this.image = {
+        name: null,
+        type: null,
+        src:
+          "https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png",
+      };
     },
   },
 };

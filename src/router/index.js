@@ -12,6 +12,7 @@ import CleanersRouter from '../components/cleaners/route';
 import SchedulesRouter from '../components/schedules/route';
 import CoursesRouter from '../components/courses/route';
 import GenerationsRouter from '../components/generations/route';
+import ExamsRouter from '../components/exams/route';
 
 const routes = [
   ...SchoolsRouter,
@@ -23,6 +24,7 @@ const routes = [
   ...SchedulesRouter,
   ...CoursesRouter,
   ...GenerationsRouter,
+  ...ExamsRouter,
   {
     path: '/schools/:schoolId/manages',
     name: 'home',

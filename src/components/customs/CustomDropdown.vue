@@ -11,6 +11,7 @@
         filter
         @filter="handleFilterChange"
         :placeholder="placeholder"
+        :filterPlaceholder="'Search'"
         optionLabel="Value"
         :class="required && message_error !== '' ? p_invalid : ''"
         @update:modelValue="updateModelValue"
@@ -58,7 +59,7 @@
       </Dropdown>
       <small v-if="message_error !== ''" class="flex text-red-500 mt-1">
         {{ message_error }}
-        <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 2px" />
+        <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 3px" />
       </small>
     </section>
   </div>

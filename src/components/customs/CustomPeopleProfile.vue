@@ -4,8 +4,12 @@
     </div> -->
   <div class="shadow-8 md:shadow-2 surface-overlay h-full p-2">
     <div class="text-center">
-      <div class="my-3 flex justify-content-center flex-wrap " @click="$emit('onClick')">
-        <div class="profile-picture" :style="style">
+      <div class="my-3 flex justify-content-center flex-wrap" @click="$emit('onClick')">
+        <div
+          class="profile-picture"
+          :style="style"
+          v-tooltip.top="'Click to change profile'"
+        >
           <!-- :src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png" -->
           <img :src="ProfileURL ? ProfileURL : defaultImg" />
         </div>
