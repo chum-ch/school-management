@@ -3,14 +3,18 @@
     <!-- Navigation with breadCrum  -->
     <custom-navigation :breadCrumb="breadCrumb" />
     <div>
-      <custom-qa-form />
+      <custom-qa-form  v-show="false"/>
     </div>
+    <ExamDetails/>
   </div>
 </template>
 
 <script>
+import ExamDetails from "./ExamDetails.vue";
 export default {
-  components: {},
+  components: {
+    ExamDetails
+  },
   data() {
     return {
       // Bread Crumb

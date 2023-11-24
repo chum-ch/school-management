@@ -59,12 +59,12 @@ export default {
         },
         {
           field: "Credit",
-          header: "Credit",
+          header: "Credit(h)",
         },
-        {
-          field: "Class.Name",
-          header: "Class",
-        },
+        // {
+        //   field: "Class.Name",
+        //   header: "Class",
+        // },
       ],
     };
   },
@@ -107,7 +107,7 @@ export default {
       try {
         let courses = await this.$api.course.listCourses(this.schoolId);
         if (courses && courses.data && courses.data.length > 0) {
-          this.tableDataCourses = courses.data;
+          this.tableDataCourses = courses.data
         } else {
           this.tableDataCourses = [];
         }

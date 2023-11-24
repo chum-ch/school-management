@@ -20,23 +20,25 @@
         :label="'Save exam'"
         :warning="true"
         :disabled="
-          this.schemaExam.Questions.length > 0 &&
-          !this.schemaExam.Questions[0].Options[0].Text ||
-          !schemaExam.ExamDate ||
-          !schemaExam.StartTime ||
-          !schemaExam.EndTime
+          (schemaExam.Questions.length > 0 &&
+          schemaExam.Questions[0].Options[0].Text ==='') ||
+          schemaExam.ExamDate ==='' ||
+          schemaExam.StartTime === '' ||
+          schemaExam.EndTime === '' ||
+          schemaExam.ExamTitle === ''
         "
       />
     </div>
     <div class="col-6 scroll-div">
       <div class="qa">
-        <div class="fw-bolder fs-4 sticky top-0 z-2 bg-white m-0">
-          <p class="m-0">Question section</p>
+        <div class=" sticky top-0 z-2 bg-white m-0">
+          <p class="m-0 fw-bolder fs-4">Question section</p>
           <custom-input-text
             :placeholder="'Exam title'"
             class=""
             :hideLabel="true"
             v-model="schemaExam.ExamTitle"
+            :message_error="message.Date"
           />
         </div>
         <div
@@ -138,7 +140,7 @@
                 v-if="
                   itemQuestion.Options &&
                   itemQuestion.Options.length > 0 &&
-                  itemQuestion.Options.some((item) => item.Text !== '')
+                  itemQuestion.Options.some((item) => item.IsCorrect === true)
                 "
               >
                 <input
@@ -160,8 +162,8 @@
     <div class="col-4 scroll-div">
       <div class="sticky top-0 bg-white w-full bg-white">
         <!-- <h4>Summary</h4> -->
-        <div class="fw-bolder fs-5 sticky top-0 z-2 bg-white m-0">
-          <p class="m-0">Summary</p>
+        <div class=" sticky top-0 z-2 bg-white m-0">
+          <p class="m-0 fw-bolder fs-5">Summary</p>
           <div class="row">
             <custom-calendar
               :isShowIcon="true"
@@ -190,6 +192,7 @@
             <custom-text-area
               :placeholder="'Enter description about this exam'"
               v-model="schemaExam.Description"
+              class="mt-2"
             />
           </div>
         </div>
@@ -315,7 +318,11 @@ export default {
     async submit() {
       if (
         this.schemaExam.Questions.length > 0 &&
-        this.schemaExam.Questions[0].Options[0].Text !== ""
+        this.schemaExam.Questions[0].Options[0].Text &&
+        this.schemaExam.ExamDate &&
+        this.schemaExam.StartTime &&
+        this.schemaExam.ExamTitle &&
+        this.schemaExam.EndTime
       ) {
         await this.$api.exam.createExam(this.schoolId, this.schemaExam);
         this.setDefaultValue();
@@ -378,6 +385,10 @@ export default {
     },
     removeOption(indexQuestion, indexCheckBox) {
       this.schemaExam.Questions[indexQuestion].Options.splice(indexCheckBox, 1);
+      if(!this.schemaExam.Questions[indexQuestion].Options.some((item) => item.IsCorrect === true)) {
+        this.schemaExam.Questions[indexQuestion].Points = 0
+        this.getTotalQAndPoint();
+      }
     },
     chooseAnswer(indexQuestion) {
       this.schemaExam.Questions[indexQuestion].Disabled = !this.schemaExam.Questions[

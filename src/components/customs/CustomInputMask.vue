@@ -15,7 +15,7 @@
       />
       <small v-if="message_errors !== ''" class="flex text-red-500">
         {{ message_errors }}
-        <i :class="message_errors ? 'pi pi-info-circle' : ''" style="margin: 3px" />
+        <i :class="message_errors ? 'pi pi-info-circle' : ''" style="margin: 2px" />
       </small>
     </section>
   </div>
@@ -32,6 +32,7 @@ export default {
     return {
       values: "",
       message_errors: this.message_error,
+      p_invalid: ''
     };
   },
   props: {

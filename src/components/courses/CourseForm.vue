@@ -23,10 +23,12 @@
             :label="'Credit(s)'"
             v-model="courseForm.Credit"
             :required="true"
+            :isDecimal="true"
             :message_error="message.Credit"
-            class="col-6 py-0"
+            class="col-12 py-0"
           />
           <custom-dropdown
+            v-show="false"
             :options="classesOptions"
             :placeholder="'Select class'"
             :label="'Classes'"
@@ -115,9 +117,7 @@ export default {
       try {
         if (
           this.courseForm.Name &&
-          this.courseForm.Credit &&
-          this.selectClass &&
-          Object.keys(this.selectClass).length > 0
+          this.courseForm.Credit
         ) {
           let course = {};
           this.courseForm = {
@@ -137,12 +137,12 @@ export default {
           this.closeDialogCourseForm();
         } else {
           if (!this.courseForm.Name) {
-            this.message.Name = "Course's name is required.";
+            this.message.Name = "Course's name is required";
           } else {
             this.message.Name = "";
           }
           if (!this.courseForm.Credit) {
-            this.message.Credit = "Credit is required.";
+            this.message.Credit = "Credit is required";
           } else {
             this.message.Credit = "";
           }

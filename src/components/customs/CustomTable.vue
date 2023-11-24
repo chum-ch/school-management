@@ -15,7 +15,7 @@
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickEdit', $event)"
           :outlined="true"
-          :disabled="disabledDetails"
+          :disabled="disabledEdit"
           v-if="!isHideEditBtn"
         />
         <custom-button
@@ -27,15 +27,15 @@
           :disabled="disabledDelete"
           v-if="!isHideDeleteBtn"
         />
-        <custom-button
+        <!-- <custom-button
           :label="'More'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickDetails', selection)"
           :warning="true"
           :outlined="true"
-          :disabled="disabledDetails"
-          v-if="isHideDetailsBtn"
-        />
+          :disabled="disabledEdit"
+          v-if="!isHideDetailsBtn"
+        /> -->
       </div>
       <custom-input-text
         v-model="filters['global'].value"
@@ -78,7 +78,7 @@
             not found! 🥺
           </div>
         </template>
-        <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+        <Column :selectionMode="selectionMode?selectionMode:'multiple'" headerStyle="width: 3rem"></Column>
         <template v-for="(item, index) in columns" :key="index">
           <Column
             :field="item.field"
@@ -128,7 +128,8 @@ export default {
       globalFilterFields: [null],
       // Button
       disabledDelete: true,
-      disabledDetails: true,
+      disabledEdit: true,
+      isGo: true
     };
   },
   name: "CustomTable",
@@ -152,6 +153,7 @@ export default {
     isHideDeleteBtn: Boolean,
     isHideDetailsBtn: Boolean,
     isHideAction: Boolean,
+    selectionMode: String
   },
   emits: [
     "selected-row-data",
@@ -167,13 +169,13 @@ export default {
         if (data.length > 0) {
           this.disabledDelete = false;
           if (data.length > 1) {
-            this.disabledDetails = true;
+            this.disabledEdit = true;
           } else {
-            this.disabledDetails = false;
+            this.disabledEdit = false;
           }
         } else {
           this.disabledDelete = true;
-          this.disabledDetails = true;
+          this.disabledEdit = true;
         }
       },
     },
@@ -188,17 +190,22 @@ export default {
   },
   methods: {
     onRowClick(data){
-      this.$emit('onClickDetails', [data.data])
+      if(this.isGo) {
+        this.$emit('onClickDetails', [data.data])
+      } else {
+        this.isGo = true
+      }
     },
     selectedRow() {
       this.emitSelectedRowData("selectRow");
     },
     unSelectedRow() {
+      this.isGo = false
       // this.selectedRowData = this.selectedRowData.filter(item => item.index !== event.index);
       this.emitSelectedRowData("unSelectRow");
     },
     unSelectedAllRows() {
-      this.disabledDetails = true;
+      this.disabledEdit = true;
       this.disabledDelete = true;
       this.selection = [];
       this.emitSelectedRowData("unSelectAllRow");

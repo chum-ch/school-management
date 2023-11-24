@@ -21,6 +21,7 @@
       <custom-tab :dataTabs="dataTabs" class="pe-2">
         <template #DetailsStudent>
           <img :src="myImge" alt="" />
+         
         </template>
         <template #Schedule>
           <custom-full-calendar />

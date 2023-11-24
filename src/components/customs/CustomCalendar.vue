@@ -1,7 +1,9 @@
 <template>
   <div class="mb-1">
     <section class="flex flex-column">
-      <label v-show="!hideLabel" for="date">Date<span v-if="required" class="text-red-500"> *</span></label>
+      <label v-show="!hideLabel" for="date"
+        >Date<span v-if="required" class="text-red-500"> *</span></label
+      >
       <Calendar
         class="text-white"
         v-model="values"
@@ -9,12 +11,12 @@
         dateFormat="yy-mm-dd"
         :selectionMode="isMultipleDate ? 'multiple' : isRangeDate ? 'range' : 'single'"
         id="date"
-        :class="[required || message_error !== '' ? p_invalid : '']"
+        :class="[required || message_errors !== '' ? p_invalid : '']"
         @update:modelValue="updateModelValue"
       />
-      <small v-if="message_error !== ''" class="flex text-red-500 ">
-        {{ message_error }}
-        <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 3px" />
+      <small v-if="message_errors !== ''" class="flex text-red-500">
+        {{ message_errors }}
+        <i :class="message_errors ? 'pi pi-info-circle' : ''" style="margin: 2px" />
       </small>
     </section>
   </div>
@@ -31,6 +33,7 @@ export default {
     return {
       values: "",
       message_errors: this.message_error,
+      p_invalid: "",
     };
   },
   props: {
@@ -48,7 +51,7 @@ export default {
     values: {
       immediate: true,
       handler(data) {
-        if(data) {
+        if (data) {
           this.$emit("update:modelValue", data);
           this.message_errors = "";
         }
@@ -65,7 +68,7 @@ export default {
     },
   },
   created() {
-    this.updateModelValue(this.modelValue)
+    this.updateModelValue(this.modelValue);
   },
   methods: {
     updateModelValue(value) {
@@ -78,6 +81,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style >
-
-</style>
+<style></style>

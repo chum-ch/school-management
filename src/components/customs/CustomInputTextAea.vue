@@ -12,7 +12,7 @@
         />
     <small v-if="message_error !== ''" class="flex text-red-500">
       {{ message_error }}
-      <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 3px" />
+      <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 2px" />
     </small>
   </div>
 </template>

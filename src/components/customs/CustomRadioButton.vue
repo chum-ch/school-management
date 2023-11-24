@@ -1,6 +1,6 @@
 <template>
   <div class="p-fluid">
-    <label v-if="label !== ''" class="mb-2" :class="hideLabel  ? 'd-none' : ''"
+    <label v-if="label !== ''" class="mb-2" :class="hideLabel ? 'd-none' : ''"
       >{{ label }}
     </label>
     <div
@@ -11,24 +11,22 @@
       <div
         v-for="(item, index) in categories"
         :key="index"
-        class="flex align-items-center "
+        class="flex align-items-center"
       >
-        <div 
-        v-if="item.Text"
-        >
-        <RadioButton
-          v-model="values"
-          :inputId="item.Value"
-          name="radio"
-          :value="item"
-          :disabled="item.Disable"
-        />
-        <label
-          :for="item.Value"
-          class="ml-2"
-          :style="item.Disable ? objectStyleCSS : ''"
-          >{{ item.Value }}</label
-        >
+        <div v-if="item.Value">
+          <RadioButton
+            v-model="values"
+            :inputId="item.Value"
+            name="radio"
+            :value="item"
+            :disabled="item.Disable"
+          />
+          <label
+            :for="item.Value"
+            class="ml-2"
+            :style="item.Disable ? objectStyleCSS : ''"
+            >{{ item.Value }}</label
+          >
         </div>
       </div>
     </div>
@@ -43,7 +41,7 @@ export default {
   },
   data() {
     return {
-      values: this.defaultValue ? this.defaultValue : "",
+      values: this.defaultValue ? this.defaultValue : {},
       p_invalid: "",
       objectStyleCSS: {
         color: "gray",
@@ -53,7 +51,7 @@ export default {
   },
   props: {
     categories: Array,
-    defaultValue: String,
+    defaultValue: [Object, String],
     label: String,
     isFlex: Boolean,
     hideLabel: Boolean,
@@ -76,8 +74,7 @@ export default {
       },
     },
   },
-  created() {
-  },
+  created() {},
   methods: {},
 };
 </script>

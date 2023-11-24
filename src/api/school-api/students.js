@@ -2,6 +2,9 @@ export default (axios)=>({
     uploadImage(studentId, data){
         return axios.post(`students/${studentId}/upload-images`, data)
     },
+    allStudentInSchool(schoolId){
+        return axios.get(`schools/${schoolId}/students`)
+    },
     listStudents(schoolId, generationId){
         return axios.get(`schools/${schoolId}/generations/${generationId}/students`)
     },

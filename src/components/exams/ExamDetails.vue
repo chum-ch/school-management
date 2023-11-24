@@ -1,6 +1,6 @@
 <template>
   <div class="">
-      <custom-qa :examSections="examSections" v-show="false" />
+      <custom-qa :examSections="examSections" v-show="true" />
   </div>
 </template>
 
@@ -31,14 +31,19 @@ export default {
     //   },
     // },
   },
+  updated() {
+    
+  },
   created() {
     // this.values = this.modelValue;
+    this.getExam('exams:5b2a3fa695e34494a5bbc294cbea0b1a')
   },
   methods: {
     async getExam(id) {
       let exams = await this.$api.exam.getExam(this.schoolId, id);
-      if (exams && exams.data[0]) {
-        this.examSections = exams.data[0];
+      console.log(exams);
+      if (exams && exams.data) {
+        this.examSections = exams.data;
       }
     },
   },

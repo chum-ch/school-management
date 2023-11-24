@@ -31,7 +31,7 @@
     <div class="" v-else>
       <InputText
         :style="style"
-        :class="[required && message_error !== '' ? p_invalid : '']"
+        :class="[required || message_error !== '' ? p_invalid : '']"
         :placeholder="placeholder"
         :disabled="is_disabled"
         v-model="values"
@@ -41,10 +41,9 @@
     <small
       v-if="message_error !== ''"
       class="flex text-red-500"
-      :class="hideLabel ? 'd-none' : ''"
     >
       {{ message_error }}
-      <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 3px" />
+      <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 2px" />
     </small>
   </div>
 </template>

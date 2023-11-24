@@ -52,7 +52,7 @@
           <custom-radio-button
             v-model="gender"
             :label="'Gender'"
-            :defaultValue="'Male'"
+            :defaultValue="gender"
             :isFlex="true"
             class="col-12 py-0"
             :categories="radioButtonOptionStudent"
@@ -77,14 +77,15 @@ export default {
       generationId: this.$route.params.generationId,
       studentID: "",
       // Form student
-      gender: "",
+      gender: {
+        Value: "Male",
+      },
       radioButtonOptionStudent: [
         {
           Value: "Male",
         },
         {
           Value: "Female",
-          Disable: false,
         },
       ],
       studentForm: {
@@ -129,7 +130,7 @@ export default {
         this.studentForm.FirstName = data.FirstName;
         this.studentForm.LastName = data.LastName;
         this.studentForm.Email = data.Email;
-        this.gender = data.Gender;
+        this.gender = { Value: data.Gender };
         this.studentForm.ID = data.ID;
         // Get studentID
         this.studentID = data.STUDENTS_ID;
@@ -154,7 +155,7 @@ export default {
           this.selectClass["Id"] = this.selectClass["ID"];
           delete this.selectClass["Value"];
           delete this.selectClass["ID"];
-          this.studentForm.Gender = this.gender;
+          this.studentForm.Gender = this.gender.Value;
           this.studentForm.Class = this.selectClass;
           let student = {};
           if (this.studentID) {
@@ -239,6 +240,7 @@ export default {
       this.studentID = "";
       this.footer_label = "";
       this.selectClass = "";
+      this.gender = {};
     },
   },
 };
