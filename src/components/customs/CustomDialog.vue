@@ -27,6 +27,7 @@
           />
           <custom-button
             :label="footer_label ? footer_label : 'Submit'"
+            :disabled="disabledSubmitBtn"
             :danger="danger"
             @onClick="($event) => $emit('onClickDialogSubmit', $event)"
           />
@@ -50,6 +51,7 @@ export default {
   },
   props: {
     msg: String,
+    disabledSubmitBtn: Boolean,
     showDialog: Boolean,
     modal_header: String,
     dialog_width: String,

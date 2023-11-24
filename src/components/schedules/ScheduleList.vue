@@ -31,6 +31,8 @@
         </template>
       </custom-dialog>
     </div>
+    <custom-full-calendar :events="events" />
+
     <!-- Component  -->
     <!-- Chil schedule form  -->
     <ScheduleForm ref="refToChildScheduleForm" @updatedSchedule="updatedSchedule" />
@@ -44,6 +46,8 @@ export default {
   },
   data() {
     return {
+      // Calendar
+      events: [],
       trainerOptions: [],
       roomOptions: [{ Name: "B2" }, { Name: "B3" }, { Name: "C4" }],
       something: "",
@@ -55,11 +59,11 @@ export default {
       tableDataSchedules: [],
       columnsSchedules: [
         {
-          field: "Title",
+          field: "Course.Name",
           header: "Subject's name",
         },
         {
-          field: "StartDate",
+          field: "Date",
           header: "Date",
         },
         {
@@ -75,8 +79,12 @@ export default {
           header: "Class",
         },
         {
-          field: "Class.Room.Name",
+          field: "Room.Name",
           header: "Room",
+        },
+        {
+          field: "Trainer.Name",
+          header: "Trainer",
         },
       ],
     };
@@ -121,7 +129,7 @@ export default {
           { label: "Schedules", to: `/schools/${schoolId}/schedules` }
         );
         this.listSchedules();
-      } 
+      }
     },
     updatedSchedule(event) {
       if (event && event.CloseDialog) {
@@ -135,11 +143,21 @@ export default {
       try {
         let schedules = await this.$api.schedule.listSchedules(this.schoolId);
         if (schedules && schedules.data.length > 0) {
-          this.tableDataSchedules = schedules.data.map((schedule) => {
-            let splitDate = schedule.StartDate.split("T");
-            schedule.StartDate = splitDate[0];
-            return schedule;
+          this.events = schedules.data.map((item) => {
+            const objEvent = {
+              title: item.Course.Name,
+              start: `${item.Date}T${item.StartTime}:00`,
+              end: `${item.Date}T${item.EndTime}:00`,
+              extendedProps: {
+                className: item.Class.Name,
+                teacherName: item.Trainer.Name,
+                roomName: item.Room.Name,
+                data: item
+              },
+            };
+            return objEvent
           });
+          this.tableDataSchedules = schedules.data;
         } else {
           this.tableDataSchedules = [];
         }

@@ -52,7 +52,7 @@
           <custom-radio-button
             v-model="gender"
             :label="'Gender'"
-            :defaultValue="'Male'"
+            :defaultValue="gender"
             :isFlex="true"
             class="col-12 py-0"
             :categories="radioButtonOptionStudent"
@@ -74,16 +74,18 @@ export default {
   data() {
     return {
       schoolId: this.$route.params.schoolId,
+      generationId: this.$route.params.generationId,
       studentID: "",
       // Form student
-      gender: "",
+      gender: {
+        Value: "Male",
+      },
       radioButtonOptionStudent: [
         {
           Value: "Male",
         },
         {
           Value: "Female",
-          Disable: false,
         },
       ],
       studentForm: {
@@ -128,7 +130,7 @@ export default {
         this.studentForm.FirstName = data.FirstName;
         this.studentForm.LastName = data.LastName;
         this.studentForm.Email = data.Email;
-        this.gender = data.Gender;
+        this.gender = { Value: data.Gender };
         this.studentForm.ID = data.ID;
         // Get studentID
         this.studentID = data.STUDENTS_ID;
@@ -153,18 +155,20 @@ export default {
           this.selectClass["Id"] = this.selectClass["ID"];
           delete this.selectClass["Value"];
           delete this.selectClass["ID"];
-          this.studentForm.Gender = this.gender;
+          this.studentForm.Gender = this.gender.Value;
           this.studentForm.Class = this.selectClass;
           let student = {};
           if (this.studentID) {
             student = await this.$api.student.updateStudent(
               this.schoolId,
+              this.generationId,
               this.studentForm,
               this.studentID
             );
           } else {
             student = await this.$api.student.createStudent(
               this.schoolId,
+              this.generationId,
               this.studentForm
             );
           }
@@ -236,6 +240,7 @@ export default {
       this.studentID = "";
       this.footer_label = "";
       this.selectClass = "";
+      this.gender = {};
     },
   },
 };

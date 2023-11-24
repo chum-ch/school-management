@@ -1,19 +1,9 @@
 <template>
-  <div class="hello">
-    <h1>{{ msg }} </h1>
-    <div
-      class="viewInfo grid row"
-      v-for="(item, index) in items_view_info"
-      :key="index"
-    >
-      <div class="flex justify-content-between mb-2">
-        <p>{{ item.label }}</p>
-        <h6 class="fw-bold">{{ item.value }}</h6>
-      </div>
+    <div class="flex justify-content-between mb-2 ">
+      <p>{{ label }}</p>
+      <h6 class="fw-bold" >{{ value }}</h6>
     </div>
-  </div>
 </template>
-
 <script>
 export default {
   components: {},
@@ -21,8 +11,8 @@ export default {
     return {};
   },
   props: {
-    msg: String,
-    items_view_info: Array,
+    label: String,
+    value: String,
   },
   emits: [""],
   watch: {

@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div class="mb-1">
     <section class="flex flex-column">
-    <div>
-      <label for="date">Date<span v-if="required" class="text-red-500"> *</span></label>
-    </div>
+      <label v-show="!hideLabel" for="date"
+        >Date<span v-if="required" class="text-red-500"> *</span></label
+      >
       <Calendar
         class="text-white"
         v-model="values"
@@ -11,11 +11,12 @@
         dateFormat="yy-mm-dd"
         :selectionMode="isMultipleDate ? 'multiple' : isRangeDate ? 'range' : 'single'"
         id="date"
+        :class="[required || message_errors !== '' ? p_invalid : '']"
         @update:modelValue="updateModelValue"
       />
-      <small v-if="message_error !== ''" class="flex text-red-500">
-        {{ message_error }}
-        <i :class="message_error ? 'pi pi-info-circle' : ''" style="margin: 2px" />
+      <small v-if="message_errors !== ''" class="flex text-red-500">
+        {{ message_errors }}
+        <i :class="message_errors ? 'pi pi-info-circle' : ''" style="margin: 2px" />
       </small>
     </section>
   </div>
@@ -31,6 +32,8 @@ export default {
   data() {
     return {
       values: "",
+      message_errors: this.message_error,
+      p_invalid: "",
     };
   },
   props: {
@@ -41,13 +44,17 @@ export default {
     isRangeDate: Boolean,
     modelValue: [String, Date],
     message_error: String,
+    hideLabel: Boolean,
   },
   emits: ["update:modelValue"],
   watch: {
     values: {
       immediate: true,
       handler(data) {
-        this.$emit("update:modelValue", data);
+        if (data) {
+          this.$emit("update:modelValue", data);
+          this.message_errors = "";
+        }
       },
     },
     message_error: {
@@ -55,12 +62,13 @@ export default {
       handler(data) {
         if (data) {
           this.p_invalid = "p-invalid";
+          this.message_errors = data;
         }
       },
     },
   },
   created() {
-    this.updateModelValue(this.modelValue)
+    this.updateModelValue(this.modelValue);
   },
   methods: {
     updateModelValue(value) {
@@ -73,6 +81,4 @@ export default {
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style >
-
-</style>
+<style></style>

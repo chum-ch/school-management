@@ -1,28 +1,27 @@
 <template>
   <div>
-  <div class="hello flex gap-2">
-    <div class="mt-4">
-      <div class="shadow-8 md:shadow-2 surface-overlay p-3 w-25rem">
-        <!-- <div class="w-2rem h-2rem bg-warning border-circle text-center text-white float-end">.</div> -->
+    <div class="hello flex p-2 column-gap-2">
+      <div class="shadow-8 md:shadow-2 surface-overlay p-2 w-29rem h-full">
         <div class="text-center">
-          <div class="mb-3 flex justify-content-center flex-wrap">
-            <div class="profile-picture">
+          <div class="my-3 flex justify-content-center flex-wrap">
+            <div class="profile-picture" :style="style">
               <img
                 src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png"
               />
             </div>
           </div>
-          <h3>{{ full_name }}</h3>
+          <h3>{{ fullName }}</h3>
           <p>{{ email }}</p>
         </div>
         <divider-primevue />
-       <slot name="view_info"></slot>
+        <slot name="view_info"></slot>
+      </div>
+
+      <div class="w-full">
+      
+        <slot name="view_tab"></slot>
       </div>
     </div>
-    <div class="tab">
-      <slot name="view_tab"></slot>
-    </div>
-  </div>
   </div>
 </template>
 
@@ -30,13 +29,13 @@
 export default {
   components: {},
   data() {
-    return {
-    };
+    return {};
   },
   props: {
     msg: String,
-    full_name: String,
-    email: String
+    fullName: String,
+    email: String,
+    style: Object,
   },
   emits: [""],
   watch: {
@@ -47,11 +46,8 @@ export default {
     //   },
     // },
   },
-  created() {
-    
-  },
-  methods: {
-  },
+  created() {},
+  methods: {},
 };
 </script>
 

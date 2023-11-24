@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="mb-1">
     <section class="flex flex-column">
       <label for="date"
         >{{ label }}<span v-if="required" class="text-red-500"> *</span></label
@@ -8,6 +8,7 @@
         ref="inputmask"
         class=""
         v-model="values"
+        :class="[required || message_error !== '' ? p_invalid : '']"
         :mask="mask"
         :placeholder="placeholder"
         @update:modelValue="updateModelValue"
@@ -31,6 +32,7 @@ export default {
     return {
       values: "",
       message_errors: this.message_error,
+      p_invalid: ''
     };
   },
   props: {
@@ -47,8 +49,8 @@ export default {
     values: {
       immediate: true,
       handler(data) {
-        let splitTime = data.split(":");
-        if (splitTime.length > 0 && data) {
+        if (data) {
+          let splitTime = data.split(":");
           if (splitTime[0] !== "_" && parseInt(splitTime[0], 10) > 24) {
             this.$emit("isNotMatch", true);
             this.message_errors = "Hour is wrong format.";

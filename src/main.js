@@ -13,6 +13,7 @@ import "primevue/resources/themes/lara-light-blue/theme.css"
 // import "./assets/theme.css";     
 //core
 import "primevue/resources/primevue.min.css";
+
 //icons
 import "primeicons/primeicons.css";
 // Bootstrap
@@ -34,6 +35,14 @@ import Sidebar from 'primevue/sidebar';
 import ScrollPanel from 'primevue/scrollpanel';
 import TabView from 'primevue/tabview';
 import TabPanel from 'primevue/tabpanel';
+import Splitter from 'primevue/splitter';
+import SplitterPanel from 'primevue/splitterpanel';
+import FileUpload from 'primevue/fileupload';
+import Tooltip from 'primevue/tooltip';
+import Tag from "primevue/tag";
+import Checkbox from "primevue/checkbox";
+import RadioButton from "primevue/radiobutton";
+
 
 // Custom component
 import NavigationView from "./views/NavigationView.vue";
@@ -49,7 +58,18 @@ import CustomCalendar from './components/customs/CustomCalendar.vue';
 import CustomInputMask from './components/customs/CustomInputMask.vue';
 import CustomDropdown from './components/customs/CustomDropdown.vue';
 import CustomRadioButton from './components/customs/CustomRadioButton.vue';
+import CustomTab from './components/customs/CustomTab.vue';
+import CustomPeopleProfile from './components/customs/CustomPeopleProfile.vue';
+import PeopleProfile from './components/customs/PeopleProfile.vue';
+import CustomCropImg from './components/customs/CustomCropImg.vue';
+import CustomInputNumber from './components/customs/CustomInputNumber.vue';
+import CustomQA from './components/customs/CustomQA.vue';
+import CustomCheckBox from './components/customs/CustomCheckBox.vue';
+import CustomInputTextAea from './components/customs/CustomInputTextAea.vue';
+import CustomQAForm from './components/customs/CustomQAForm.vue';
 const app = createApp(App);
+app.directive('tooltip', Tooltip);
+
 // Config Axios 
 // const axiosInstance = axios.create({
 //     baseURL: process.env.VUE_APP_BACKEND_URL,
@@ -76,6 +96,12 @@ app.component('sidebar-primevue', Sidebar);
 app.component('scrollpanel-primevue', ScrollPanel);
 app.component('tab-view-primevue', TabView);
 app.component('tab-panel-primevue', TabPanel);
+app.component('splitter-primevue', Splitter);
+app.component('file-upload-primevue', FileUpload);
+app.component('splitter-panel-primevue', SplitterPanel);
+app.component('tag-primevue', Tag);
+app.component('checkbox-primevue', Checkbox);
+app.component('radio-primevue', RadioButton);
 
 // Custom
 app.component('custom-navigation', NavigationView);
@@ -91,6 +117,15 @@ app.component('custom-calendar', CustomCalendar);
 app.component('custom-input-mask', CustomInputMask);
 app.component('custom-dropdown', CustomDropdown);
 app.component('custom-radio-button', CustomRadioButton);
+app.component('custom-tab', CustomTab);
+app.component('custom-people-profile', CustomPeopleProfile);
+app.component('custom-profile', PeopleProfile);
+app.component('custom-crop-img', CustomCropImg);
+app.component('custom-input-number', CustomInputNumber);
+app.component('custom-qa', CustomQA);
+app.component('custom-qa-form', CustomQAForm);
+app.component('custom-check-box', CustomCheckBox);
+app.component('custom-text-area', CustomInputTextAea);
 
 const vuetify = createVuetify({
   components,

@@ -1,18 +1,22 @@
 <template>
   <div>
     <div class="action flex justify-content-between flex-wrap mx-3">
-      <div class="flex justify-content-start flex-wrap">
+      <div class="flex justify-content-start flex-wrap"
+      v-if="!isHideAction"
+      >
         <custom-button
           :label="'Add'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickCreate', $event)"
+          v-if="!isHideAddBtn"
         />
         <custom-button
           :label="'Edit'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickEdit', $event)"
           :outlined="true"
-          :disabled="disabledDetails"
+          :disabled="disabledEdit"
+          v-if="!isHideEditBtn"
         />
         <custom-button
           :label="'Delete'"
@@ -21,15 +25,17 @@
           :danger="true"
           :outlined="true"
           :disabled="disabledDelete"
+          v-if="!isHideDeleteBtn"
         />
-        <custom-button
+        <!-- <custom-button
           :label="'More'"
           class="mt-3 me-3"
           @onClick="($event) => $emit('onClickDetails', selection)"
           :warning="true"
           :outlined="true"
-          :disabled="disabledDetails"
-        />
+          :disabled="disabledEdit"
+          v-if="!isHideDetailsBtn"
+        /> -->
       </div>
       <custom-input-text
         v-model="filters['global'].value"
@@ -37,6 +43,7 @@
         :show_icon="true"
         :left_icon="true"
         :search_icon="true"
+        class=""
       />
     </div>
     <div class="m-1">
@@ -44,7 +51,7 @@
       <DataTable
         :value="table_data"
         scrollable
-        scrollHeight="500px"
+        scrollHeight="450px"
         class="p-datatable-sm"
         tableStyle="min-width: 50rem"
         :rowHover="true"
@@ -56,6 +63,7 @@
         @row-unselect-all="unSelectedAllRows"
         paginator
         :rows="9"
+        @row-click="onRowClick($event, data)"
         :rowsPerPageOptions="[9, 50, 100]"
         paginatorTemplate="RowsPerPageDropdown FirstPageLink PrevPageLink CurrentPageReport NextPageLink LastPageLink"
         currentPageReportTemplate="Showing from {first} to {last} of {totalRecords}"
@@ -63,19 +71,39 @@
         v-model:selection="selection"
         v-model:filters="filters"
       >
-      
         <template #empty>
-        <div v-if="table_data.length !==0">
-          The <span class="text-danger fw-bolder"> {{ filters["global"].value }}</span> is not found! 🥺
-        </div>
-          </template
-        >
-        <Column selectionMode="multiple" headerStyle="width: 3rem"></Column>
+          <div v-if="table_data.length !== 0">
+            The
+            <span class="text-danger fw-bolder"> {{ filters["global"].value }}</span> is
+            not found! 🥺
+          </div>
+        </template>
+        <Column :selectionMode="selectionMode?selectionMode:'multiple'" headerStyle="width: 3rem"></Column>
         <template v-for="(item, index) in columns" :key="index">
           <Column
             :field="item.field"
             :header="item.header"
             headerStyle="width: 3rem"
+            v-if="item.field === 'ProfileURL'"
+          >
+            <template #body="{ data }">
+              <img
+                :src="
+                  data.ProfileURL
+                    ? data.ProfileURL
+                    : 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/2c/Default_pfp.svg/1200px-Default_pfp.svg.png'
+                "
+                alt=""
+                class="`flag rounded-circle"
+                style="width: 35px"
+              />
+            </template>
+          </Column>
+          <Column
+            :field="item.field"
+            :header="item.header"
+            headerStyle="width: 3rem"
+            v-else
           >
           </Column>
         </template>
@@ -100,7 +128,8 @@ export default {
       globalFilterFields: [null],
       // Button
       disabledDelete: true,
-      disabledDetails: true,
+      disabledEdit: true,
+      isGo: true
     };
   },
   name: "CustomTable",
@@ -118,9 +147,21 @@ export default {
     msg: String,
     table_data: Array,
     columns: Array,
-    data_key: String
+    data_key: String,
+    isHideAddBtn: Boolean,
+    isHideEditBtn: Boolean,
+    isHideDeleteBtn: Boolean,
+    isHideDetailsBtn: Boolean,
+    isHideAction: Boolean,
+    selectionMode: String
   },
-  emits: ["selected-row-data", "onClickCreate", "onClickDelete", "onClickDetails", "onClickEdit"],
+  emits: [
+    "selected-row-data",
+    "onClickCreate",
+    "onClickDelete",
+    "onClickDetails",
+    "onClickEdit",
+  ],
   watch: {
     selection: {
       immediate: true,
@@ -128,13 +169,13 @@ export default {
         if (data.length > 0) {
           this.disabledDelete = false;
           if (data.length > 1) {
-            this.disabledDetails = true;
+            this.disabledEdit = true;
           } else {
-            this.disabledDetails = false;
+            this.disabledEdit = false;
           }
         } else {
           this.disabledDelete = true;
-          this.disabledDetails = true;
+          this.disabledEdit = true;
         }
       },
     },
@@ -148,17 +189,25 @@ export default {
     this.initFilters();
   },
   methods: {
+    onRowClick(data){
+      if(this.isGo) {
+        this.$emit('onClickDetails', [data.data])
+      } else {
+        this.isGo = true
+      }
+    },
     selectedRow() {
       this.emitSelectedRowData("selectRow");
     },
     unSelectedRow() {
+      this.isGo = false
       // this.selectedRowData = this.selectedRowData.filter(item => item.index !== event.index);
       this.emitSelectedRowData("unSelectRow");
     },
     unSelectedAllRows() {
-      this.disabledDetails =true
-      this.disabledDelete =true
-      this.selection =[]
+      this.disabledEdit = true;
+      this.disabledDelete = true;
+      this.selection = [];
       this.emitSelectedRowData("unSelectAllRow");
     },
     selectedAllRows(event) {

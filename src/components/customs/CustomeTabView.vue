@@ -1,22 +1,20 @@
 <template>
   <div>
-
-        <TabView>
-            <TabPanel :header="nameTab">
-                <slot></slot>
-            
-            </TabPanel>
-        </TabView>
-    </div>
+    <TabView>
+      <TabPanel :header="nameTab">
+        <slot></slot>
+      </TabPanel>
+    </TabView>
+  </div>
 </template>
 
 <script>
-import TabView from 'primevue/tabview';
-import TabPanel from 'primevue/tabpanel';
+import TabView from "primevue/tabview";
+import TabPanel from "primevue/tabpanel";
 export default {
   components: {
     TabView,
-    TabPanel
+    TabPanel,
   },
   data() {
     return {
@@ -36,12 +34,10 @@ export default {
     //   },
     // },
   },
-  created() {
-  },
+  created() {},
   methods: {},
 };
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
-<style scoped>
-</style>
+<style scoped></style>

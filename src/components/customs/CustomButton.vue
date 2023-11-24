@@ -1,8 +1,9 @@
 <template>
   <div class="p-fluid">
-    <div class="my-1 text-white">
+    <div class="my-1 text-white" :style="disabled ? objectStyleCSS : ''">
       <Button
         @click="($event) => $emit('onClick', $event)"
+        :style="style"
         :badge="badge"
         :type="type ? type : 'button'"
         v-show="hide ? false : true"
@@ -47,6 +48,10 @@
             ? 'pi pi-times'
             : plus_icon
             ? 'pi pi-plus'
+            : image_icon
+            ? 'pi pi-images'
+            : cloud_icon
+            ? 'pi pi-cloud-upload'
             : ''
         "
       />
@@ -63,11 +68,15 @@ export default {
     Button,
   },
   data() {
-    return {};
+    return {
+      objectStyleCSS: {
+        cursor: "not-allowed",
+      },
+    };
   },
   props: {
     badge: String,
-    msg: String,
+    style: Object,
     normal: Boolean,
     large: Boolean,
     hide: Boolean,
@@ -81,6 +90,8 @@ export default {
     delete_icon: Boolean,
     cancel_icon: Boolean,
     plus_icon: Boolean,
+    image_icon: Boolean,
+    cloud_icon: Boolean,
     is_link: Boolean,
     disabled: Boolean,
     secondary: Boolean,
@@ -104,4 +115,5 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 </style>

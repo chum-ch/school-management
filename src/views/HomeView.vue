@@ -25,7 +25,7 @@
     /> -->
     <!-- Navigation with breadCrum  -->
     <custom-navigation :breadCrumb="breadCrumb" />
-    <div class="row row-cols-1 row-cols-md-4 row-cols-sm-2 px-1">
+    <div class="row row-cols-1 row-cols-md-5 row-cols-sm-3 p-2 flex justify-content-center flex-wrap">
       <div
         v-for="(item, index) in items"
         :key="index"
@@ -34,9 +34,9 @@
       >
         <div class="card h-100 custom transition-duration-500 text-center">
           <div class="image d-flex justify-content-center cursor-pointer flex-wrap my-4">
-            <img :src="item.img" alt="" srcset="" width="140" height="140" class="" />
+            <img :src="item.img" alt="" srcset="" width="70" height="70" class="" />
             <div class="card-body">
-              <h5 class="card-title w-100">{{ item.title }}</h5>
+              <h5 class="card-title">{{ item.title }}</h5>
               <p class="card-text">
                 {{ item.description }}
               </p>
@@ -86,7 +86,6 @@ export default {
   watch: {},
   created() {
     this.items = data;
-   
     this.getSchoolDetails(this.schoolId);
   },
 
@@ -94,8 +93,7 @@ export default {
     async getSchoolDetails(schoolId) {
       let school = await this.$api.school.getSchool(schoolId)
       if(school && school.data && Object.keys(school.data).length > 0){
-        this.breadCrumb = [];
-        this.breadCrumb.push({ label: `${school.data.Name}`, to: '/' }, { label: 'Manages', to: `/schools/${schoolId}/manages` })
+        this.breadCrumb = [{ label: `${school.data.Name}`, to: '/' }, { label: 'Manages', to: `/schools/${schoolId}/manages` }];
       }
     },
     list(screen) {
@@ -106,8 +104,8 @@ export default {
 </script>
 <style scoped>
 .custom:hover {
-  border: 1px solid #00b982;
+  border: 1px solid #007bff;
   transform: scale(1.02);
-  box-shadow: #d2d0cd 0px -1px 3px 0px inset;
+  box-shadow: #007bff 0px -1px 3px 0px inset;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="hello p-fluid">
+  <div class="mb-1 p-fluid">
     <section class="flex flex-column">
       <div>
         <label v-if="label !== ''">{{ label }} </label>
@@ -11,17 +11,14 @@
         filter
         @filter="handleFilterChange"
         :placeholder="placeholder"
+        :filterPlaceholder="'Search'"
         optionLabel="Value"
         :class="required && message_error !== '' ? p_invalid : ''"
         @update:modelValue="updateModelValue"
       >
-        <!-- <template #value="slotProps">
-          {{ slotProps.value.Value ? slotProps.value.Value : slotProps.placeholder }}
-        </template>
-        <template #option="slotProps">
- 
-          {{ slotProps.option }}
-        </template> -->
+      <template #content>
+        <p>Hee</p>
+      </template>
         <template #value="slotProps">
           <div v-if="slotProps.value" class="flex align-items-center">
             <div>{{ slotProps.value.Value }}</div>
@@ -80,6 +77,7 @@ export default {
       selectedValue: "",
       filterValue: "",
       p_invalid: "",
+      
     };
   },
   props: {

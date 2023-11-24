@@ -1,17 +1,24 @@
 export default (axios)=>({
-    listStudents(schoolId){
+    uploadImage(studentId, data){
+        return axios.post(`students/${studentId}/upload-images`, data)
+    },
+    allStudentInSchool(schoolId){
         return axios.get(`schools/${schoolId}/students`)
     },
-    createStudent(schoolId, data){
-        return axios.post(`schools/${schoolId}/students`, data)
+    listStudents(schoolId, generationId){
+        return axios.get(`schools/${schoolId}/generations/${generationId}/students`)
     },
-    updateStudent(schoolId, data, ID){
-        return axios.put(`schools/${schoolId}/students/${ID}`, data)
+    createStudent(schoolId, generationId, data){
+        return axios.post(`schools/${schoolId}/generations/${generationId}/students`, data)
     },
-    getStudent(schoolId, ID){
-        return axios.get(`schools/${schoolId}/students/${ID}`)
+    updateStudent(schoolId, generationId, data, ID){
+        return axios.put(`schools/${schoolId}/generations/${generationId}/students/${ID}`, data)
     },
-    deleteStudent(schoolId, ID){
-        return axios.delete(`schools/${schoolId}/students/${ID}`)
-    }
+    getStudent(schoolId, generationId, ID){
+        return axios.get(`schools/${schoolId}/generations/${generationId}/students/${ID}`)
+    },
+    deleteStudent(schoolId, generationId, ID){
+        return axios.delete(`schools/${schoolId}/generations/${generationId}/students/${ID}`)
+    },
+    
 })

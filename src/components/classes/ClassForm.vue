@@ -21,7 +21,7 @@
           :options="roomOptions"
           :placeholder="'Select room'"
           :label="'Room'"
-          class="py-0"
+          class="col-12 py-0"
           v-model="selectRoom"
           :modelValue="selectRoom"
           :required="true"
@@ -34,7 +34,7 @@
           :label="'Trainer'"
           v-model="selectTrainer"
           :modelValue="selectTrainer"
-          class="py-0"
+          class="col-12 py-0"
           @addNewDropdown="onClickCreateTrainer"
         />
       </template>
@@ -123,9 +123,7 @@ export default {
       try {
         if (
           this.classForm.Name &&
-          this.selectRoom &&
-          this.selectRoom.Value &&
-          Object.keys(this.selectRoom).length > 0
+          this.selectRoom && Object.keys(this.selectRoom).length > 0
         ) {
           this.classForm = {
             ...this.classForm,

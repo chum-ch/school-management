@@ -1,20 +1,21 @@
 <template>
-  <div class="hello">
+  <div class="">
     <!-- Navigation with breadCrum  -->
     <!-- <custom-navigation :home="home" /> -->
-    <div class="row row-cols-1 row-cols-md-4 row-cols-sm-2 px-1">
+    
+    <div v-show="true" class="row row-cols-1 row-cols-md-4 row-cols-sm-2 px-1 flex justify-content-center flex-wrap">
       <div v-for="(item, index) in schoolItems" :key="index" class="col">
         <div class="card h-100 custom transition-duration-500">
           <div
             class="image text-center d-flex justify-content-center cursor-pointer flex-wrap my-4"
           >
             <img
-              src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRo_2n4ixhk90E0WEDNpghs_skGLtJZuMNCGfqyiBtnwoKRjd8DRZxCgLlmGYCwm9fuGAg&usqp=CAU"
+              :src="item.LogoURL"
               alt=""
               srcset=""
               width="120"
               height="120"
-              class=""
+              class="rounded-circle ms-2"
             />
             <div class="card-body">
               <h5 class="card-title text-center">{{ item.Name }}</h5>
@@ -61,9 +62,14 @@ export default {
   },
   methods: {
     async getSchoolsList() {
-      let schools = await this.$api.school.listSchools();
-      if (schools && schools.data && schools.data.length > 0) {
-        this.schoolItems = schools.data;
+      try {
+        let schools = await this.$api.school.listSchools();
+        if (schools && schools.data && schools.data.length > 0) {
+          this.schoolItems = schools.data
+        }
+        
+      } catch (error) {
+        console.log('e', error);
       }
     },
     manage(id) {
