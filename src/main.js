@@ -8,9 +8,9 @@ import  utils  from './utils/utils'
 import PrimeVue from 'primevue/config';
 import 'primeflex/primeflex.css'
 //theme
-// import "primevue/resources/themes/lara-light-indigo/theme.css";  
-import "primevue/resources/themes/lara-light-blue/theme.css"
-// import "./assets/theme.css";     
+import "primevue/resources/themes/lara-light-indigo/theme.css";  
+// import "primevue/resources/themes/lara-light-blue/theme.css"
+// import "./assets/theme.css";    
 //core
 import "primevue/resources/primevue.min.css";
 
